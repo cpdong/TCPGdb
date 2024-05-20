@@ -11,7 +11,7 @@ import numpy as np;
 import base64, os,io,urllib;
 import pymongo, subprocess;
 
-os.chdir('/Users/cpdong/Desktop/flaskapp/TTTT')
+#os.chdir('/Users/cpdong/Desktop/flaskapp/TTTT')
 
 app = Flask(__name__)
 
