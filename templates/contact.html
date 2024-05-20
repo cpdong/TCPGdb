@@ -1,0 +1,57 @@
+{% extends '/base.html' %}
+
+{% block headContent %}
+    <title>Contact | TCPGdb</title>
+
+{% endblock %}
+
+{% block navContent %}
+<li><a href="{{ url_for('datasets') }}"><strong>Datasets Summary</strong></a></li>
+<li><a href="{{ url_for('crispr') }}"><strong>CRISPR Screen</strong></a></li>
+<li><a href="{{ url_for('tscore') }}"><strong>T-score</strong></a></li>
+<li><a href="{{ url_for('search') }}"><strong>Search</strong></a></li>
+<li><a href="{{ url_for('document') }}"><strong>Document</strong></a></li>
+<li><a href="{{ url_for('contact') }}"><strong><span style="color: #ffffff;">Contact</span></strong></a></li>
+{% endblock %}
+
+
+{% block content %}
+
+<div style="margin:0px 100px 20px 200px; display:flex;">
+  <div style="width:400px;">
+    <div>
+      <h3>Web developer</h2>
+    </div>
+
+    <div class="image">
+      <img style="width:290px;height:300px;" src="./static/img/photo/dong.png">
+    </div>
+
+    <div class="content">
+      <h3 class="ui header">Chuanpeng Dong</h3>
+        <h5><i class="student icon"></i>Yale-BI Biomedical Data Science Postdoc Fellow</h5>
+        <h5><i class="suitcase icon"></i><br>Yale University</h5>
+        <h5> <i class="mail icon"></i>&nbsp;&nbsp;<script type="text/javascript">print_mail_to_link("chuanpeng.dong", "yale.edu")</script><a href="mailto:chuanpeng.dong@yale.edu">chuanpeng.dong@yale.edu</a></h5>
+    </div>
+  </div>
+
+  <div style="width:400px;">
+    <div>
+    <h3>Principal investigator</h2>
+    </div>
+
+    <div class="image">
+      <img style="width:290px;height:300px;" src="./static/img/photo/chen.png">
+    </div>
+
+    <div class="content">
+      <h3 class="ui header">Sidi Chen</h3>
+        <h5><i class="student icon"></i>Leader of <a href="https://sidichenlab.org/" target="_blank">Sidi Chen Lab</a> </h5>
+        <h5><i class="suitcase icon"></i><br>Yale Univerisity Genetics</h5>
+        <h5> <i class="mail icon"></i>&nbsp;&nbsp;<script type="text/javascript">print_mail_to_link("sidi.chen", "ale.edu")</script><a href="mailto:sidi.chen@yale.edu">sidi.chen@yale.edu</a></h5>
+    </div>
+  </div>
+  
+</div>
+
+{% endblock content %}

@@ -1,0 +1,352 @@
+{% extends '/base.html' %}
+
+{% block headContent %}
+    <title>Search | TCPGdb</title>
+
+<!--- clicked button change color and revert --->
+<script>
+    var prevDiv=null
+    function changecolor(){ 
+      if(prevDiv) {
+        prevDiv.style.backgroundColor = "white";
+      }
+      var target = event.currentTarget
+      target.style.backgroundColor="#d1d3d5" 
+      selected = true                               
+      prevDiv = target;
+    }
+</script>
+<!--- clicked button scroll to the locations --->
+<script> function go2qsearch1() { const element = document.getElementById("qsearch1");element.scrollIntoView();}</script>
+<script> function go2qsearch2() { const element = document.getElementById("qsearch2");element.scrollIntoView();}</script>
+<script> function go2qsearch3() { const element = document.getElementById("qsearch3");element.scrollIntoView();}</script>
+<script> function go2qsearch4() { const element = document.getElementById("qsearch4");element.scrollIntoView();} </script>
+<script> function go2qsearch5() { const element = document.getElementById("qsearch5");element.scrollIntoView();}</script>
+<script> function go2qsearch6() { const element = document.getElementById("qsearch6");element.scrollIntoView();} </script>
+
+{% endblock %}
+
+
+{% block navContent %}
+<li><a href="{{ url_for('datasets') }}"><strong>Datasets Summary</strong></a></li>
+<li><a href="{{ url_for('crispr') }}"><strong>CRISPR Screen</strong></a></li>
+<li><a href="{{ url_for('tscore') }}"><strong>T-score</strong></a></li>
+<li><a href="{{ url_for('search') }}"><strong>Search</strong></a></li>
+<li><a href="{{ url_for('document') }}"><strong>Document</strong></a></li>
+<li><a href="{{ url_for('contact') }}"><strong>Contact</strong></a></li>
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="container-fluid ng-scope" style="text-align:justify; text-justify:inter-ideograph;">
+    <div class="row">
+        <div class="col-md-2">
+            <div style="position:fixed;text-align:left;">
+                <h4><a id="qbtn1" onclick="go2qsearch1();changecolor(this);" class="cursor-hand list-group-item">Gene information</a></h5>
+                <h4><a id="qbtn2" onclick="go2qsearch2();changecolor(this);" class="cursor-hand list-group-item">Expression in T cells</a></h5>
+                <h4><a id="qbtn3" onclick="go2qsearch3();changecolor(this);" class="cursor-hand list-group-item">Co-expression genes</a></h5>
+                <h4><a id="qbtn4" onclick="go2qsearch4();changecolor(this);" class="cursor-hand list-group-item">CAR-T persistance</a></h5>
+                <h4><a id="qbtn5" onclick="go2qsearch5();changecolor(this);" class="cursor-hand list-group-item">Prognosis in T cancers</a></h5>
+                <h4><a id="qbtn6" onclick="go2qsearch6();changecolor(this);" class="cursor-hand list-group-item">Autoimmune associations</a></h5>
+            </div>
+        </div>
+
+
+    <div class="col-md-10">
+
+            <div class="panel panel-default" id="qsearch1">
+                <div class="panel-heading">
+                    <h4 class="ng-binding">Basic information of CXCL10</h4>
+                </div>
+                <div class="panel-body">
+                    <dl class="dl-horizontal ng-scope" ng-repeat="gene_info in gene_basic_RNR_list_all">
+                        <dt>Entrez Gene ID:</dt>
+                        <dd><a href="https://www.ncbi.nlm.nih.gov/gene/3627" target="_blank" class="ng-binding">3627</a></dd>
+                        <dt>Gene symbol:</dt>
+                        <dd class="ng-binding">CXCL10</dd>
+                        <dt>Alias:</dt>
+                        <dd class="ng-binding">C7|IFI10|INP10|IP-10|SCYB10|crg-2|gIP-10|mob-1</dd>
+                        <dt>Locus:</dt>
+                        <dd class="ng-binding">76021117 - 76023497</dd>
+                        <dt>Chromosome:</dt>
+                        <dd class="ng-binding">4</dd>
+                        <dt>Full name:</dt>
+                        <dd class="ng-binding">C-X-C motif chemokine ligand 10</dd>
+                        <dt>Gene type:</dt>
+                        <dd class="ng-binding">protein_coding</dd>
+                        <dt>Summary:</dt>
+                        <dd style="text-align: justify" class="ng-binding">This antimicrobial gene encodes a chemokine of the CXC subfamily and ligand for the receptor CXCR3. Binding of this protein to CXCR3 results in pleiotropic effects, including stimulation of monocytes, natural killer and T-cell migration, and modulation of adhesion molecule expression. [provided by RefSeq, Sep 2014]</dd>
+                    </dl><!-- end ngRepeat: gene_info in gene_basic_RNR_list_all -->
+                </div>
+            </div>
+
+            <div class="panel panel-default" id="qsearch2">
+                <div class="panel-heading">
+                    <h4 class="ng-binding"> Baseline expression in T cell subtypes of CXCL10</h4>
+                </div>
+
+                <div class="panel-body">
+                  <img src="data:image/png;base64, {{ tcell_exp_plt }}" alt="graph">
+                </div>
+           </div>
+
+
+
+
+            <div class="panel panel-default" id="qsearch3">
+                <div class="panel-heading">
+                    <h4 class="ng-binding">Co-expressed genes & pathways with CXCL10</h4>
+                </div>
+                <div class="panel-body">
+           <ul id="myTab" class="nav nav-tabs" style="margin-left: 15px">
+            <li class="active"><a href="#tabsb1" data-toggle="tab" style="font-family: Times New Roman; font-size: 16px;font-weight:bold">Coexpressed-Genes</a>
+            </li>
+            <li><a href="#tabsb2" data-toggle="tab" style="font-family: Times New Roman; font-size: 16px;font-weight:bold">Coexpressed-Gene-GSEA</a>
+            </li>
+           </ul>
+<div class="tab-content">
+  <div id="tabsb1" style="width:1000px;height:400px;" class="tab-pane fade in active echart">
+<script type="text/javascript">
+var chartDom = document.getElementById('tabsb1');
+var myChart = echarts.init(chartDom);
+var option;
+
+option = {
+  dataset: [
+    {
+      id: 'up',
+      dimensions: ['gene', 'tscore'],
+      source: [
+        ['gene1', 0.99],
+        ['gene6', 0.92],
+        ['gene3', 0.88],
+        ['gene5', 0.83],
+        ['gene4', 0.77]
+      ]
+    },
+    {
+      id: 'down',
+      dimensions: ['gene', 'tscore'],
+      source: [
+        ['gene8', -0.79],
+        ['gene2', -0.88],
+        ['gene9', -0.9],
+        ['gene7', -0.93]
+      ]
+    }
+  ],
+  tooltip: {
+    show: true
+  },
+  title:{
+    text: 'Top genes up 50 and down 50 genes',
+    left: 'center',
+    padding: [
+      15,  // up
+      0, // right
+      5,  // down
+      0, // left
+    ],
+    textStyle: {
+      fontSize: '20',
+    },
+  },
+  xAxis: {
+    type: 'category',
+    axisLabel: { show: false },
+    axisTick: { show: false },
+    splitArea: {
+      show: false
+    },
+    splitLine: {
+      show: true
+    }
+  },
+  yAxis: {
+    type: 'value',
+    name: 'RRA score',
+    nameLocation: 'middle',
+    nameGap: 35,
+    nameTextStyle: { fontSize: 18 },
+    axisLine: { show: true },
+    axisTick: { show: true },
+    axisLabel: {
+      show: true,
+      fontSize: 15
+    },
+    splitArea: {
+      show: false
+    },
+    splitLine: {
+      show: false
+    }
+  },
+  series: [
+    {
+      type: 'bar',
+      datasetId: 'up',
+      encode: {
+        x: 'gene',
+        y: 'tscore'
+      }
+    },
+    {
+      type: 'bar',
+      datasetId: 'down',
+      encode: {
+        x: 'gene',
+        y: 'tscore'
+      }
+    }
+  ]
+};
+
+option && myChart.setOption(option);
+</script></div>
+
+<div id="tabsb2" style="width:1000px;height:400px;" class="tab-pane fade echart">
+<script type="text/javascript">
+var chartDom = document.getElementById('tabsb2');
+var myChart = echarts.init(chartDom);
+var option;
+
+option = {
+  dataset: [
+    {
+      id: 'up',
+      dimensions: ['gene', 'tscore'],
+      source: [
+        ['gene1', 2.99],
+        ['gene6', 0.92],
+        ['gene3', 0.88],
+        ['gene5', 0.83],
+        ['gene4', 0.77]
+      ]
+    },
+    {
+      id: 'down',
+      dimensions: ['gene', 'tscore'],
+      source: [
+        ['gene8', -0.79],
+        ['gene2', -1.88],
+        ['gene9', -0.9],
+        ['gene7', -0.93]
+      ]
+    }
+  ],
+  tooltip: {
+    show: true
+  },
+  title:{
+    text: 'Top genes up 50 and down 50 genes',
+    left: 'center',
+    padding: [
+      15,  // up
+      0, // right
+      5,  // down
+      0, // left
+    ],
+    textStyle: {
+      fontSize: '20',
+    },
+  },
+  xAxis: {
+    type: 'category',
+    axisLabel: { show: false },
+    axisTick: { show: false },
+    splitArea: {
+      show: false
+    },
+    splitLine: {
+      show: true
+    }
+  },
+  yAxis: {
+    type: 'value',
+    name: 'RRA score',
+    nameLocation: 'middle',
+    nameGap: 35,
+    nameTextStyle: { fontSize: 18 },
+    axisLine: { show: true },
+    axisTick: { show: true },
+    axisLabel: {
+      show: true,
+      fontSize: 15
+    },
+    splitArea: {
+      show: false
+    },
+    splitLine: {
+      show: false
+    }
+  },
+  series: [
+    {
+      type: 'bar',
+      datasetId: 'up',
+      encode: {
+        x: 'gene',
+        y: 'tscore'
+      }
+    },
+    {
+      type: 'bar',
+      datasetId: 'down',
+      encode: {
+        x: 'gene',
+        y: 'tscore'
+      }
+    }
+  ]
+};
+
+option && myChart.setOption(option);
+</script></div>
+
+</div>
+
+               </div>
+            </div>
+
+            <div class="panel panel-default" id="qsearch4">
+                <div class="panel-heading">
+                    <h4 class="ng-binding">CAR-T cell persistance and CXCL10 expression</h4>
+                </div>
+              <div class="panel-body" align="justify">
+                <img src="data:image/png;base64, {{ cart_plt }}" alt="graph">
+              </div>
+     </div>
+
+            <div class="panel panel-default" id="qsearch5">
+                <div class="panel-heading">
+                    <h4 class="ng-binding">CXCL10 expression & T lymphoma/leukemia prognosis</h4>
+                </div>
+                <div class="panel-body">
+                <img src="data:image/png;base64, {{ kmplt1_data }}" alt="graph">
+              </div>
+            </div>
+
+
+
+            <div class="panel panel-default" id="qsearch6">
+                <div class="panel-heading">
+                    <h4 class="ng-binding">CXCL10 expression & autoimmune diseases risk</h4>
+                </div>
+              <div class="panel-body">
+                <img src="data:image/png;base64, {{ autoimmune_plt }}" alt="graph">
+
+              </div>
+        </div>
+
+
+
+<script>
+$('a[data-toggle=tab').on('shown.bs.tab', function (e) {
+  window.dispatchEvent(new Event('resize'));   
+});
+</script>
+
+
+{% endblock content %}

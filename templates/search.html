@@ -1,0 +1,72 @@
+{% extends '/base.html' %}
+
+{% block headContent %}
+    <title>Search | TCPGdb</title>
+
+
+<script type="text/javascript"> /* listen to the reset bar, if no input no respond */
+$(document).ready(function(){
+ $("#reset").click(function(){ 
+  location.reload(true);
+  });
+});
+</script>
+
+{% endblock %}
+
+{% block navContent %}
+<li><a href="{{ url_for('datasets') }}"><strong>Datasets Summary</strong></a></li>
+<li><a href="{{ url_for('crispr') }}"><strong>CRISPR Screen</strong></a></li>
+<li><a href="{{ url_for('tscore') }}"><strong>T-score</strong></a></li>
+<li><a href="{{ url_for('search') }}"><strong><span style="color: #ffffff;">Search</span></strong></a></li>
+<li><a href="{{ url_for('document') }}"><strong>Document</strong></a></li>
+<li><a href="{{ url_for('contact') }}"><strong>Contact</strong></a></li>
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="row" style="margin-left:5px;margin-right:5px">
+<div ng-view="" class="ng-scope"><!--<div class="container" >-->
+<div class="row ng-scope" style="margin-left:200px;margin-right:300px">
+
+           <div class="bs-callout bs-callout-info" style="margin-top: 10px;margin-bottom: 10px;">
+                <div class="description" style="margin-bottom: 25px">
+                       <span class="glyphicon glyphicon-eye-open" style="color: #335238;"> </span>
+                    <strong style="line-height : 30px ;font-size:20px;color: #335238;font-family: Times, serif;"> Overview of Search page</strong>
+
+                           <p style="font-family: Times, serif; font-size: 18px; text-align: justify;text-justify: inter-character">
+                               This module provides multiple ways to search in the database. Users can search by different gene symbols, pathways (gene sets), and  immune cells.<br></p>
+                            <p style="font-family: Times, serif; font-size: 18px;"><b> <font color="#b62b6e">Gene search:</font></b> The results of expression distribution between response and treatment, and the significant survival risk  across different tumor were presented.</p>
+                </div>
+                <hr>
+
+<div class="row" style="margin-bottom: 25px; padding-left:30px; padding-right:100px;">                
+
+<div class="col-sm-12" style="padding-left:30px; padding-right:100px;">
+    <div style="margin-left:10px;"><span style="font-size: 16px">Type a gene symbol or Ensembl ID!</span></div>
+        <form action="/details" class="searchform" method="get">
+                                <div class="col-sm-10" id="search">
+                                    <input class="form-control" type="text" required="required" id="search_gene_text" name="search" placeholder="Eg. PDCD1 or ENSG00000188389" autofocus="" autocomplete="off" style="height:45px;margin-top:5px;"></div>
+                                <div class="col-sm-2">
+                                    <button type="submit" class="btn btn-primary" id="searchGeneButt" style="width:135px;height:45px;padding:0px;font-size:18px;margin-top:5px;">Search Gene !</button>
+                                </div>
+            </form>
+        </div>
+            </div>
+    </div>
+
+      <div class="panel panel-default" style="margin: 0px auto;">
+    <div class="row" style="display:flex; justify-content:center; margin-top:25px;margin-bottom:25px;"> 
+        <img src="./static/img/Panel5_cover.png" width="45%" height="45%">
+    </div>
+      </div>
+
+         </div>
+       </div>
+
+
+      </div>
+
+{% endblock content %}

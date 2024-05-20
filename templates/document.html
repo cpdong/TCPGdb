@@ -1,0 +1,178 @@
+{% extends '/base.html' %}
+
+{% block headContent %}
+    <title>Document | TCPGdb</title>
+
+
+<script> // clicked button change color and revert//
+var prevDiv=null
+function changecolor(){ 
+  if(prevDiv) {
+    prevDiv.style.backgroundColor = "white";
+  }
+  var target = event.currentTarget
+  target.style.backgroundColor="#d1d3d5" 
+  selected = true                               
+  prevDiv = target;
+}
+</script>
+
+<!--scroll to section-->
+<script> function go2sec1() { const element = document.getElementById("process");element.scrollIntoView();}</script>
+<script> function go2sec2() { const element = document.getElementById("acknowledge");element.scrollIntoView();}</script>
+<script> function go2sec3() { const element = document.getElementById("term");element.scrollIntoView();} </script>
+
+{% endblock %}
+
+{% block navContent %}
+<li><a href="{{ url_for('datasets') }}"><strong>Datasets Summary</strong></a></li>
+<li><a href="{{ url_for('crispr') }}"><strong>CRISPR Screen</strong></a></li>
+<li><a href="{{ url_for('tscore') }}"><strong>T-score</strong></a></li>
+<li><a href="{{ url_for('search') }}"><strong>Search</strong></a></li>
+<li><a href="{{ url_for('document') }}"><strong><span style="color: #ffffff;">Document</span></strong></a></li>
+<li><a href="{{ url_for('contact') }}"><strong>Contact</strong></a></li>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container-fluid ng-scope" style="text-align:justify; text-justify:inter-ideograph;">
+    <div class="row">
+        <div class="col-md-2">
+            <div style="position:fixed;text-align:left;">
+                <h4 class="text-purple"><span class="glyphicon glyphicon-list list-group"></span> Document</h4>
+                <h4><a onclick="go2sec1();changecolor(this);" class="cursor-hand list-group-item">Data process</a></h5>
+                <h4><a onclick="go2sec2();changecolor(this);" class="cursor-hand list-group-item">Acknowledge</a></h5>
+                <h4><a onclick="go2sec3();changecolor(this);" class="cursor-hand list-group-item">Term of usage</a></h5>
+            </div>
+        </div>
+        <div class="col-md-10">
+            <div class="panel panel-default" id="process">
+                <div class="panel-heading">
+                    <h4>Data collection and process</h4>
+                </div>
+                <div class="panel-body ">
+                    <div>
+                        <span class="glyphicon glyphicon-bell" style="line-height : 20px ;color: #b52e31;font-size:20px;"> </span><strong style="line-height : 20px ;font-size:20px;color: #b52e31;font-family: Times, serif;"> Data collection</strong>
+                        <br>
+                        <p style="vertical-align: top;display: inline-block;line-height : 30px ;font-size:18px;font-family:Times New Roman, Times, serif;">
+                        TCPGdb obtained T cell screen data from <a href="https://www.ncbi.nlm.nih.gov/gds" target="_blank">Gene Expression Omnibus (GEO)</a>, orignial literatures, and <a href="https://scholar.google.com/" target="_blank"> Google scholar</a> by keywords <span style="color: #e86304"> “CRISPR screen AND T cell”</span>.
+                            Both RNA-seq and microarray studies for featuring gene function in T/lymphocytes were retrieved from GEO and SRA as well.<br>
+                            We downloaded raw sequencing reads (if available) or  other available formats (raw count, TPM expression matrix of microarray etc.) for each dataset.
+                            Furthermore, clinical information for samples including cancer type, age, gender, survival time, CAR-T treatment, and response status were collected 
+                            from the original article.
+                            <br>
+                        All datasets accessions are listed in the Datasets Summary section.
+                        </p>
+                    </div>
+
+                    <div>
+                       <span class="glyphicon glyphicon-bell" style="line-height : 20px ;color: #b52e31;font-size:20px;"> </span><strong style="line-height : 30px ;font-size:20px;color: #b52e31;font-family: Times, serif;"> Data pretreatment</strong>
+                        <br>
+                        <p style="vertical-align: top;display: inline-block;line-height : 30px ;font-size:18px;font-family:Times, serif;">
+                            <span class="glyphicon glyphicon-hand-right" style="line-height : 20px ;color: #b52e31;font-size:14px;"> </span><strong style="line-height : 30px ;font-size:18px"> SRA Toolkit</strong> was used to download and convert the format of sra to fastq.<br>
+                            <span class="glyphicon glyphicon-hand-right" style="line-height : 20px ;color: #b52e31;font-size:14px;"> </span><strong style="line-height : 30px ;font-size:18px"> FastQC </strong> was used for data quality control (QC), and Trimmomatic  were employed for adapter sequence removal and  trimming to obtain high-quality clean reads.
+                            Clean reads were mapped to the human reference genome GRCh38 by <strong style="line-height : 30px ;font-size:18px"> Hisat2 </strong>.<br>
+                            <span class="glyphicon glyphicon-hand-right" style="line-height : 20px ;color: #b52e31;font-size:14px;"> </span><strong style="line-height : 30px ;font-size:18px"></strong> R-package <strong style="line-height : 30px ;font-size:18px">affy</strong> and <strong style="line-height : 30px ;font-size:18px">oligo</strong> was used to process the raw microarray data.<br>
+                        
+                        </p>
+                    </div>
+                    <div>
+                        <span class="glyphicon glyphicon-bell" style="line-height : 20px ;color: #b52e31;font-size:20px;"> </span><strong style="line-height : 20px ;font-size:20px;color: #b52e31;font-family: Times, serif;"> Data analysis</strong>
+                        <br>
+
+                 <section>
+                    <div>
+                         <span class="glyphicon glyphicon-ok" style="line-height : 30px ;font-size:16px;color: #335238;"> </span><strong style="line-height : 30px ;font-size:18px;color: #335238;font-family:Times, serif;"> Identification of differentially expressed genes (DEGs)</strong>
+                        <p style="line-height : 30px ;font-size:18px;font-family:Times, serif;">
+                             The DEGs for raw count of pool CRISPR screen data were assessed by MaGeck, if sgrna raw dataset available. We applied the same procedure to uniform re-preocess all the datasets.</p>
+                             <p style="line-height : 30px ;font-size:18px;font-family:Times, serif;">The gene symbol was curated with bioMart and GeneCards, for both human and mouse dataset.</p>
+                    </div>
+                </section>
+                 <section>
+                        <span class="glyphicon glyphicon-ok" style="line-height : 30px ;font-size:16px;color: #335238;"> </span>
+                        <strong style="line-height : 30px ;font-size:18px;color: #335238;font-family: Times, serif;"> Gene Set Enrichment Analysis (GSEA)</strong>
+                            <p style="line-height : 30px ;font-size:18px;font-family: Times, serif;text-align:justify">
+                                GSEA (R package clusterProfiler) were used to explore the differential gene results from Mageck as follows:
+                                (1) Gene ontology biological process <a href="http://geneontology.org/docs/go-enrichment-analysis/" target="_blank">(BP)</a>, and (2) kyoto encyclopedia of genes and genomes <a href="https://www.genome.jp/kegg/pathway.html" target="_blank">(KEGG)</a> pathways.</p>
+                </section>
+
+                <section>
+                        <span class="glyphicon glyphicon-ok" style="line-height : 30px ;font-size:18px;color: #335238;"> </span>
+                    <strong style="line-height : 30px ;font-size:18px;color: #335238;font-family: Times, serif;"> Survival Analysis</strong>
+                            <p style="line-height : 30px ;font-size:18px;font-family: Times, serif;">
+                                The survival analysis of specified gene was calculated by Kaplan-Meier (KM) model through R packages (“survival” and “survminer”). P values less than 0.05 were considered as statistically significant.
+                            </p>
+                </section>
+                <section>
+                        <span class="glyphicon glyphicon-ok" style="line-height : 30px ;font-size:18px;color: #335238;"> </span>
+                    <strong style="line-height : 30px ;font-size:18px;color: #335238;font-family: Times, serif;"> Score System</strong>
+                            <p style="line-height : 30px ;font-size:18px;font-family: Times, serif;">
+                                We adopted a roubust rank aggregation scoring system to evaluate the evidence of T cell gene potential by intergating datasets.The score was calculated by the following formula in dataset or cancer type aspects XXXX.
+                            </p>
+                </section>
+                </div>
+            </div>
+       </div>
+
+            <div class="panel panel-default" id="acknowledge">
+                <div class="panel-heading">
+                    <h4>Acknowledgement</h4>
+                </div>
+                <div class="panel-body ">
+                    <div>
+                        <span class="glyphicon glyphicon-bell" style="line-height : 20px ;color: #b52e31;font-size:20px;"> </span><strong style="line-height : 20px ;font-size:20px;color: #b52e31;font-family: Times, serif;"> Data collection</strong>
+                        <br>
+                        <p style="vertical-align: top;display: inline-block;line-height : 30px ;font-size:18px;font-family:Times New Roman, Times, serif;">
+                        We would like to ackowledge Dr. Iqbal for kindly sharing the clinical information for T cell lymphoma/leukemia data. 
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="panel panel-default" id="term">
+                <div class="panel-heading">
+                    <h4>Term of usage</h4>
+                </div>
+                <div class="panel-body ">
+                    <div>
+                        <p style="vertical-align: top;display: inline-block;line-height : 30px ;font-size:18px;font-family:Times New Roman, Times, serif;">
+                        TCPGdb is a database providing comprehensive expression resources and functional analysis of T cell gene functionalities by Chen lab. Our team makes no warranties or representations, express or implied, with respect to any of the Content, including as to the present accuracy, completeness, timeliness, adequacy, or usefulness of any of the Content. By using this website, you agree that Chen lab will not be liable for any losses or damages arising from your use of or reliance on the Content, or other websites or information to which this website may be linked.<br>
+                        </p>
+                        <p style="vertical-align: top;display: inline-block;line-height : 30px ;font-size:18px;font-family:Times New Roman, Times, serif;">
+                        TCPGdb is freely accessible for research use in an academic setting. You may view the Content solely for your own personal reference or use for research in an academic setting. All academic research use of the Content must credit TCPGdb as the source of the Content and reference these Terms of Use; outside of scientific publication, you may not otherwise redistribute or share the Content with any third party, in part or in whole, for any purpose, without the express permission of Chen lab.<br>
+                        </p>
+
+                        <p style="vertical-align: top;display: inline-block;line-height : 30px ;font-size:18px;font-family:Times New Roman, Times, serif;">
+                        Unless you have signed a license agreement with Chen lab, you may not use any part of the Content for any other purpose, including:<br>
+                        1.  use or incorporation into a commercial product or towards performance of a commercial service;
+                        <br>
+                        2.  research use in a commercial setting;
+                        <br>
+                        3.  use for patient services; or
+                        <br>
+                        4.  generation of reports in a hospital or other patient care setting.
+                        <br>
+                        You may not copy, transfer, reproduce, modify or create derivative works of TCPGdb for any commercial purpose without the express permission of Chen lab.
+                            If you seek to use TCPGdb for such purposes, please request the license which best describes your anticipated use of TCPGdb below:
+                        <br>
+                        1.  Research use in commercial setting
+                        <br>
+                        2.  Use in a commercial product
+                        <br>
+                        3.  Use for patient services or reports in a hospital setting
+                        <br>
+                        Please contact Dr. Chen via sidi.chen@yale.edu
+                        <br>
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+
+    </div>
+</div>
+</div>
+
+{% endblock content %}

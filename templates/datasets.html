@@ -1,0 +1,235 @@
+{% extends '/base.html' %}
+
+{% block headContent %}
+    <title>Datasets | TCPGdb</title>
+{% endblock %}
+
+
+{% block navContent %}
+<li><a href="{{ url_for('datasets') }}"><strong><span style="color: #ffffff;">Datasets Summary</span></strong></a></li>
+<li><a href="{{ url_for('crispr') }}"><strong>CRISPR Screen</strong></a></li>
+<li><a href="{{ url_for('tscore') }}"><strong>T-score</strong></a></li>
+<li><a href="{{ url_for('search') }}"><strong>Search</strong></a></li>
+<li><a href="{{ url_for('document') }}"><strong>Document</strong></a></li>
+<li><a href="{{ url_for('contact') }}"><strong>Contact</strong></a></li>
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="row" style="margin-left:5px;margin-right:5px">
+    <!-- ngView: --><div ng-view="" class="ng-scope"><div class="container-fluid ng-scope">
+   <div class="row">
+       <div class="col-md-6">
+           <div class="bs-callout bs-callout-info">
+                <div class="description" style="margin-left: 7px;">
+                       <span class="glyphicon glyphicon-eye-open" style="color: #335238;"> </span>
+                    <strong style="line-height : 30px ;font-size:20px;color: #335238;font-family: Times, serif;"> Overview of Datasets</strong>
+                           <p style="font-family: Times New Roman,serif; font-size: 17px; text-align: justify;text-justify: inter-character">
+                            Here, we summarize the T cell genomics datasets included in this study. These datasets cover genome-wide CRISPR screens, bulk and single-cell transcriptomic profiling of T and CAR-T cells, T cell-derived cancer data, and lymphocyte profiling data from autoimmune diseases.</p>
+                </div>
+            </div>
+
+
+           <div class="panel" style="margin-top: 10px;height: 540px;width:100%;border-color: #5bc0de;">
+               <div class="panel-heading" style="background-color: #A4D3EE">
+                   <h4>T Cells CRISPR Screen Datasets </h4>
+               </div>
+               <div class="panel-body" style="height: 500px;overflow:scroll">
+                   <table class="table table-condensed table-bordered table-striped table-hover" style="table-layout:fixed">
+                    <thead>
+                    <tr>
+                    <th style="width: 10%">PubMed</th>
+                    <th style="width: 10%">Year</th>
+                    <th style="width: 15%">StudyName</th>
+                    <th style="width: 10%">Species</th>
+                    <th style="width: 10%">CellType</th>
+                    <th style="width: 10%">Approach</th>
+                    <th style="width: 10%">Method</th>
+                    <th style="width: 10%">#Genes</th>
+                    <th style="width: 15%">Readout</th>
+                    </tr>
+                    </thead>
+                <tbody>
+                <tr><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=35276062" target="_blank">35276062</a></td><td>2022</td><td>Ye_CRISPRa_CD8T</td><td>mouse</td><td>CD8T</td><td>in vitro</td><td>gain</td><td>18932</td><td>kill</td></tr>
+                 <tr><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=35296855" target="_blank">35296855</a></td><td>2022</td><td>Legut_ORFs_CD4T</td><td>human</td><td>CD4T</td><td>in vitro</td><td>gain</td><td>11608</td><td>proliferation</td></tr>
+                 <tr><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=35296855" target="_blank">35296855</a></td><td>2022</td><td>Legut_ORFs_CD8T</td><td>human</td><td>CD8T</td><td>in vitro</td><td>gain</td><td>11608</td><td>proliferation</td></tr>
+                 <tr><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=35113687" target="_blank">35113687</a></td><td>2022</td><td>Schmidt_CRSIPRa_CD8T_IFNG_Prim</td><td>human</td><td>CD8T</td><td>in vitro</td><td>gain</td><td>18930</td><td>IFNG</td></tr>
+                 <tr><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=35113687" target="_blank">35113687</a></td><td>2022</td><td>Schmidt_CRSIPRa_CD4T_IL2_Prim</td><td>human</td><td>CD4T</td><td>in vitro</td><td>gain</td><td>18930</td><td>IL2</td></tr>
+                 <tr><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=35113687" target="_blank">35113687</a></td><td>2022</td><td>Schmidt_CRSIPRa_CD4T_IL2_Supp</td><td>human</td><td>CD4T</td><td>in vitro</td><td>gain</td><td>18930</td><td>IL2</td></tr>
+                 <tr><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=35113687" target="_blank">35113687</a></td><td>2022</td><td>Schmidt_CRSIPRa_CD4T_IFNG_Supp</td><td>human</td><td>CD4T</td><td>in vitro</td><td>gain</td><td>18930</td><td>IFNG</td></tr>
+                 <tr><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=35113687" target="_blank">35113687</a></td><td>2022</td><td>Schmidt_CRSIPRa_CD4T_TNF_Supp</td><td>human</td><td>CD4T</td><td>in vitro</td><td>gain</td><td>18930</td><td>TNF</td></tr>
+                 <tr><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=36702900" target="_blank">36702900</a></td><td>2023</td><td>Dai_CRISPRa_CART_CD4T</td><td>human</td><td>CART</td><td>in vitro</td><td>gain</td><td>899</td><td>longevity and cytotoxicity</td></tr>
+                 <tr><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=36702900" target="_blank">36702900</a></td><td>2023</td><td>Dai_RISPRa_CART_CD8T</td><td>human</td><td>CART</td><td>in vitro</td><td>gain</td><td>899</td><td>longevity and cytotoxicity</td></tr>
+
+                <tr><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=32640256" target="_blank">32640256</a></td><td>2020</td><td>Loo_CRISPRi_Treg_Expand</td><td>mouse</td><td>Treg</td><td>in vitro</td><td>loss</td><td>19668</td><td>Expansion</td></tr>
+                 <tr><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=32640256" target="_blank">32640256</a></td><td>2020</td><td>Loo_CRISPRi_Treg_Foxp3</td><td>mouse</td><td>Treg</td><td>in vitro</td><td>loss</td><td>19668</td><td>Foxp3</td></tr>
+                 <tr><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=36550322" target="_blank">36550322</a></td><td>2023</td><td>Szeto_CRISPRi_CD4T</td><td>mouse</td><td>CD4T</td><td>in vitro</td><td>loss</td><td>19674</td><td>differentiation</td></tr>
+                 <tr><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=35113687" target="_blank">35113687</a></td><td>2022</td><td>Schmidt_CRSIPRi_CD4T_IL2_Prim</td><td>human</td><td>CD4T</td><td>in vitro</td><td>loss</td><td>18939</td><td>IL2</td></tr>
+                 <tr><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=35113687" target="_blank">35113687</a></td><td>2022</td><td>Schmidt_CRSIPRi_CD8T_IFNG_Prim</td><td>human</td><td>CD8T</td><td>in vitro</td><td>loss</td><td>18939</td><td>IFNG</td></tr>
+                 <tr><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=32499641" target="_blank">32499641</a></td><td>2020</td><td>Cortez_CRISPRi_Treg</td><td>mouse</td><td>Treg</td><td>in vitro</td><td>loss</td><td>491</td><td>Foxp3</td></tr>
+                 <tr><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=33328215" target="_blank">33328215</a></td><td>2021</td><td>Wang_CRISPRi_CART</td><td>human</td><td>CART</td><td>in vitro</td><td>loss</td><td>18904</td><td>exhaustion</td></tr>
+                 <tr><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=30449619" target="_blank">30449619</a></td><td>2018</td><td>Shifrut_CRISPRi_CD8T</td><td>human</td><td>CD8T</td><td>in vitro</td><td>loss</td><td>19114</td><td>proliferation</td></tr>
+                 <tr><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=35750052" target="_blank">35750052</a></td><td>2022</td><td>Belk_CRISPRi_CD8T</td><td>mouse</td><td>CD8T</td><td>in vitro</td><td>loss</td><td>18421</td><td>exhaustion</td></tr>
+                 <tr><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=34879274" target="_blank">34879274</a></td><td>2021</td><td>Zhao_CRISPRi_CD8T_invitro</td><td>mouse</td><td>CD8T</td><td>in vitro</td><td>loss</td><td>19642</td><td>proliferation</td></tr>
+                 <tr><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=34879274" target="_blank">34879274</a></td><td>2021</td><td>Zhao_CRISPRi_CD8T_invivo</td><td>mouse</td><td>CD8T</td><td>in vivo</td><td>loss</td><td>19642</td><td>proliferation</td></tr>
+                 <tr><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=33328215" target="_blank">33328215</a></td><td>2019</td><td>Ye_CRISPRi_CD8T_GBM</td><td>mouse</td><td>CD8T</td><td>in vivo</td><td>loss</td><td>1657</td><td>infiltration</td></tr>
+                 <tr><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=38490212" target="_blank">38490212</a></td><td>2024</td><td>Lin_CRISPRi_CD8T_persist</td><td>mouse</td><td>CD8T</td><td>in vitro</td><td>loss</td><td>19674</td><td>persistence</td></tr>
+                 <tr><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=38490212" target="_blank">38490212</a></td><td>2024</td><td>Lin_CRISPRi_CD8T_proliferate</td><td>mouse</td><td>CD8T</td><td>in vitro</td><td>loss</td><td>19674</td><td>proliferation</td></tr>
+                 <tr><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=38490212" target="_blank">38490212</a></td><td>2024</td><td>Lin_CRISPRi_CD8T_survival</td><td>mouse</td><td>CD8T</td><td>in vitro</td><td>loss</td><td>19674</td><td>survival</td></tr>
+                 <tr><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=36002574" target="_blank">36002574</a></td><td>2022</td><td>Carnevale_CRISPRi_Tcell</td><td>human</td><td>Tcell</td><td>in vitro</td><td>loss</td><td>19112</td><td>proliferation</td></tr>
+                 <tr><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=36002574" target="_blank">36002574</a></td><td>2022</td><td>Carnevale_CRISPRi_Treg</td><td>human</td><td>Treg</td><td>in vitro</td><td>loss</td><td>19112</td><td>proliferation</td></tr>
+                </tbody>
+              </table>
+               </div>
+      </div>
+
+
+
+           <div class="panel" style="margin-top: 10px;height: 160px;width:100%;border-color: #5bc0de;">
+               <div class="panel-heading" style="background-color: #A4D3EE">
+                   <h4>Bulk RNA-Seq Profiling T Cells Datasets </h4>
+               </div>
+               <div class="panel-body" style="height: 125px;overflow:scroll">
+                   <table class="table table-condensed table-bordered table-striped table-hover" style="table-layout:fixed">
+                    <thead>
+                    <tr>
+                    <th style="width: 15%">PMID</th>
+                    <th style="width: 20%">Accession</th>
+                    <th style="width: 10%">Year</th>
+                    <th style="width: 10%">Study</th>
+                    <th style="width: 12%">#Sample</th>
+                    <th style="width: 18%">Profiling method</th>
+                    <th style="width: 15%">Norrmalization</th>
+                    </tr>
+                    </thead>
+                <tbody>
+  <tr><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=30726743" target="_blank">30726743</a></td><td>GSE107011</td><td>2019</td><td>ABIS</td><td>46</td><td>RNA-seq</td><td>TPM</td></tr>
+ <tr><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=30449622" target="_blank">30449622</a></td><td>dice-database.org</td><td>2018</td><td>DICE</td><td>967</td><td>RNA-seq</td><td>TPM</td></tr>
+                </tbody>
+              </table>
+               </div>
+        </div>
+
+
+
+
+           <div class="panel" style="margin-top: 10px;height: 200px;width:100%;border-color: #5bc0de;">
+               <div class="panel-heading" style="background-color: #A4D3EE">
+                   <h4>Chimeric antigen receptor (CAR) T Cells Datasets </h4>
+               </div>
+               <div class="panel-body" style="height: 165px;overflow:scroll">
+                   <table class="table table-condensed table-bordered table-striped table-hover" style="table-layout:fixed">
+                    <thead>
+                    <tr>
+                    <th style="width: 10%">PMID</th>
+                    <th style="width: 15%">Accession</th>
+                    <th style="width: 10%">Year</th>
+                    <th style="width: 20%">CAR-T</th>
+                    <th style="width: 10%">#Respond</th>
+                    <th style="width: 15%">#No-Respond</th>
+                    <th style="width: 20%">Profiling method</th>
+                    </tr>
+                    </thead>
+                <tbody>
+ <tr><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=33020644" target="_blank">33020644</a></td><td>GSE151511</td><td>2020</td><td>CD19</td><td>10</td><td>13</td><td>scRNA-seq</td></tr>
+ <tr><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=34861191" target="_blank">34861191</a></td><td>GSE160154</td><td>2021</td><td>MSLN</td><td>9</td><td>13</td><td>bulkRNA-seq</td></tr>
+ <tr><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=34861191" target="_blank">34861191</a></td><td>GSE160160</td><td>2021</td><td>MSLN</td><td>3</td><td>3</td><td>scRNA-seq</td></tr>
+ <tr><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=37875502" target="_blank">37875502</a></td><td>GSE223655</td><td>2023</td><td>CD19/CD20 </td><td>12</td><td>11</td><td>bulkRNA-seq</td></tr>
+ <tr><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=37875502" target="_blank">37875502</a></td><td>GSE243325</td><td>2023</td><td>CD19/CD20 </td><td>3</td><td>3</td><td>scRNA-seq</td></tr>
+                </tbody>
+              </table>
+               </div>
+        </div>
+
+
+
+           <div class="panel" style="margin-top: 10px;height: 200px;width:100%;border-color: #5bc0de;">
+               <div class="panel-heading" style="background-color: #A4D3EE">
+                   <h4>T-cell Lymphoma/Leukemia Datasets </h4>
+               </div>
+               <div class="panel-body" style="height: 165px;overflow:scroll">
+                   <table class="table table-condensed table-bordered table-striped table-hover" style="table-layout:fixed">
+                    <thead>
+                    <tr>
+                    <th style="width: 25%">CancerType</th>
+                    <th style="width: 10%">PMID</th>
+                    <th style="width: 10%">Accession</th>
+                    <th style="width: 10%">Year</th>
+                    <th style="width: 10%">#Sample</th>
+                    <th style="width: 10%">Events</th>
+                    <th style="width: 15%">ArrayPlatform</th>
+                    </tr>
+                    </thead>
+                <tbody>
+ <tr><td>Peripheral T-cell lymphoma</td><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=24632715" target="_blank">24632715</a></td><td>GSE58445</td><td>2014</td><td>193</td><td>OS</td><td>HG-U133_Plus_2</td></tr>
+ <tr><td>Peripheral T-cell lymphoma </td><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=19965671" target="_blank">19965671</a></td><td>GSE19069</td><td>2010</td><td>NA</td><td>OS</td><td>HG-U133_Plus_2</td></tr>
+ <tr><td>T-cell lymphoma</td><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=29097495" target="_blank">29097495</a></td><td>GSE90597</td><td>2018</td><td>29</td><td>OS</td><td>HuGene-1_0-st</td></tr>
+                </tbody>
+              </table>
+               </div>
+        </div>
+
+
+           <div class="panel" style="margin-top: 10px;height: 340px;width:100%;border-color: #5bc0de;">
+               <div class="panel-heading" style="background-color: #A4D3EE">
+                   <h4>Autoimmune Diseases Transcriptomic Profiling Datasets </h4>
+               </div>
+               <div class="panel-body" style="height: 300px;overflow:scroll">
+                   <table class="table table-condensed table-bordered table-striped table-hover" style="table-layout:fixed">
+                    <thead>
+                    <tr>
+                    <th style="width: 25%">DiseaseName</th>
+                    <th style="width: 10%">PMID</th>
+                    <th style="width: 10%">Accession</th>
+                    <th style="width: 10%">Year</th>
+                    <th style="width: 10%">#Disease</th>
+                    <th style="width: 10%">#Control</th>
+                    <th style="width: 15%">Profiling method</th>
+                    </tr>
+                    </thead>
+                <tbody>
+ <tr><td>Systemic lupus erythematosus</td><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=25861459" target="_blank">25861459</a></td><td>GSE50772</td><td>2015</td><td>61</td><td>20</td><td>Microarray</td></tr>
+ <tr><td>Systemic lupus erythematosus</td><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=25736140" target="_blank">25736140</a></td><td>GSE61635</td><td>2015</td><td>79</td><td>30</td><td>Microarray</td></tr>
+ <tr><td>Systemic lupus erythematosus</td><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=26382853" target="_blank">26382853</a></td><td>GSE72509</td><td>2015</td><td>99</td><td>18</td><td>RNA-seq</td></tr>
+ <tr><td>Inflammatory bowel disease</td><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=31618209" target="_blank">31618209</a></td><td>GSE126124</td><td>2019</td><td>59</td><td>32</td><td>Microarray</td></tr>
+ <tr><td>Inflammatory bowel disease</td><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=16436634" target="_blank">16436634</a></td><td>GSE3365</td><td>2006</td><td>85</td><td>42</td><td>Microarray</td></tr>
+ <tr><td>Inflammatory bowel disease</td><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=29950172" target="_blank">29950172</a></td><td>GSE112057</td><td>2018</td><td>75</td><td>12</td><td>RNA-seq</td></tr>
+ <tr><td>Multiple sclerosis</td><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=23895517" target="_blank">23895517</a></td><td>GSE43591</td><td>2013</td><td>10</td><td>10</td><td>Microarray</td></tr>
+ <tr><td>Multiple sclerosis</td><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=22021740" target="_blank">22021740</a></td><td>GSE21942</td><td>2011</td><td>14</td><td>15</td><td>Microarray</td></tr>
+ <tr><td>Multiple sclerosis</td><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=20190274" target="_blank">20190274</a></td><td>GSE17048</td><td>2010</td><td>99</td><td>45</td><td>Microarray</td></tr>
+ <tr><td>Multiple sclerosis</td><td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=28349074" target="_blank">28349074</a></td><td>E-MTAB-5151</td><td>2017</td><td>49</td><td>27</td><td>Microarray</td></tr>
+                </tbody>
+              </table>
+               </div>
+      </div>
+
+
+
+      </div>
+
+       <div class="col-md-6">
+           <div class="panel" style="margin-top: 5px;border-color: #5bc0de">
+              <div class="panel-heading" style="background-color: #A4D3EE">
+                <h4>Correlations of T Cells CRISPR Screen Datasets</h4>
+              </div>
+               <div align="center" class="panel-body">
+                <img src="./static/img/Panel2_plot1_Screen.png" width="92%" height="92%">
+               </div>
+            </div>
+           <div class="panel" style="margin-top: 5px;border-color: #5bc0de">
+              <div class="panel-heading" style="background-color: #A4D3EE">
+                   <h4>Summary of T cells Gene Transcriptomic Profiling Datasets</h4>
+                </div>
+               <div align="center" class="panel-body">
+                   <img src="./static/img/Panel2_plot2_Datasets.png" width="92%" height="92%">
+               </div>
+            </div>
+          </div>
+   </div>
+</div>
+</div>
+</div>
+
+{% endblock content %}
