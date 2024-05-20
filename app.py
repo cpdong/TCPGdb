@@ -9,13 +9,14 @@ import seaborn as sns;
 import pandas as pd;
 import numpy as np;
 import base64, os,io,urllib;
-import pymongo, subprocess;
+import subprocess;
+#import pymongo;
 
 #os.chdir('/Users/cpdong/Desktop/flaskapp/TTTT')
 
 app = Flask(__name__)
 
-
+'''
 try:
     client = pymongo.MongoClient(host = ["localhost:27017"], serverSelectionTimeoutMS = 2000)
     client.server_info() # will throw an exception
@@ -36,15 +37,15 @@ except:
 
 client = pymongo.MongoClient()
 dblist = client.list_database_names()
-
+'''
 
 
 @app.route('/', methods = ['GET', 'POST'])
 def index():
-    mgdb = client['test']
-    mgcollect = mgdb['test']
-    for document in mgcollect.find({}):
-        print(document)
+    #mgdb = client['test']
+    #mgcollect = mgdb['test']
+    #for document in mgcollect.find({}):
+    #   print(document)
     
     return render_template('index.html',title_name = 'welcome')    
 
