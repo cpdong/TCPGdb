@@ -1,0 +1,315 @@
+{% extends '/base.html' %}
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+<style type="text/css">
+
+table.table>tbody>tr:hover td,
+table.table>tbody>tr:hover th {
+  background-color: #d1d3d5 !important;
+}
+  td {border: 1px #DDD solid; padding: 5px; cursor: pointer;}
+
+.selected {
+    background-color: brown;
+    color: #FFF;
+}
+</style>
+
+{% block headContent %}
+    <title>CRISPRi | TCPGdb</title>
+
+{% endblock %}
+
+
+{% block navContent %}
+<li><a href="{{ url_for('datasets') }}"><strong>Datasets Summary</strong></a></li>
+<li><a href="{{ url_for('crispr') }}"><strong><span style="color: #ffffff;">T-Screen</span></strong></a></li>
+<li><a href="{{ url_for('score') }}"><strong>TPS-score</strong></a></li>
+<li><a href="{{ url_for('search') }}"><strong>T-GEXP</strong></a></li>
+<li><a href="{{ url_for('document') }}"><strong>Document</strong></a></li>
+<li><a href="{{ url_for('contact') }}"><strong>Contact</strong></a></li>
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="row" style="margin-left:5px;margin-right:5px">
+    <!-- ngView: --><div ng-view="" class="ng-scope"><div class="row ng-scope" style="margin-left:20px;margin-right:20px">
+    <!-- <h2 class="page-header">Differential Expression and Functional Analysis for Response and Non-response  based on Pre-treatment Samples</h2>-->
+    <div class="row">
+        <div class="col-md-3">
+            <table class="table" style="border-left-color: #008080;border-left-color: #008080;" id="table01">
+                <thead style="background-color: #84cce4">
+                <tr><th style="color: black;font-size: 20px">CRISPRi datasets</th></tr>
+                </thead>
+                <tbody>
+                <tr><td style="cursor:pointer;font-size: 15px">Arce_CRISPRi_CD4T_RestEff_IL2RA</td></tr>
+                <tr><td style="cursor:pointer;font-size: 15px">Arce_CRISPRi_CD4T_StimEff_IL2RA</td></tr>
+                <tr><td style="cursor:pointer;font-size: 15px">Arce_CRISPRi_Treg_IL2RA</td></tr>
+                <tr><td style="cursor:pointer;font-size: 15px">Belk_CRISPRi_CD8T</td></tr>
+                <tr><td style="cursor:pointer;font-size: 15px">Carnevale_CRISPRi_Tcell</td></tr>
+                <tr><td style="cursor:pointer;font-size: 15px">Carnevale_CRISPRi_Treg</td></tr>
+                <tr><td style="cursor:pointer;font-size: 15px">Cortez_CRISPRi_Treg</td></tr>
+                <tr><td style="cursor:pointer;font-size: 15px">Dai_CRISPRi_CART_CD4T</td></tr>
+                <tr><td style="cursor:pointer;font-size: 15px">Dai_CRISPRi_CART_CD8T</td></tr>
+                <tr><td style="cursor:pointer;font-size: 15px">Freimer_CRISPRi_CD4T_CTLA4</td></tr>
+                <tr><td style="cursor:pointer;font-size: 15px">Freimer_CRISPRi_CD4T_IL2</td></tr>
+                <tr><td style="cursor:pointer;font-size: 15px">Freimer_CRISPRi_CD4T_IL2RA</td></tr>
+                <tr><td style="cursor:pointer;font-size: 15px">Lin_CRISPRi_CD8T_persistence</td></tr>
+                <tr><td style="cursor:pointer;font-size: 15px">Lin_CRISPRi_CD8T_proliferate</td></tr>
+                <tr><td style="cursor:pointer;font-size: 15px">Lin_CRISPRi_CD8T_survival</td></tr>
+                <tr><td style="cursor:pointer;font-size: 15px">Long_CRISPRi_Treg_metabolic</td></tr>
+                <tr><td style="cursor:pointer;font-size: 15px">Loo_CRISPRi_Treg_Expand</td></tr>
+                <tr><td style="cursor:pointer;font-size: 15px">Loo_CRISPRi_Treg_Foxp3</td></tr>
+                <tr><td style="cursor:pointer;font-size: 15px">Schmidt_CRISPRi_Prim_CD4_IL2</td></tr>
+                <tr><td style="cursor:pointer;font-size: 15px">Schmidt_CRISPRi_Prim_CD8_IFNG</td></tr>
+                <tr><td style="cursor:pointer;font-size: 15px">Shifrut_CRISPRi_CD8T</td></tr>
+                <tr><td style="cursor:pointer;font-size: 15px">Szeto_CRISPRi_CD4T_Diff</td></tr>
+                <tr><td style="cursor:pointer;font-size: 15px">Wang_CRISPRi_CART</td></tr>
+                <tr><td style="cursor:pointer;font-size: 15px">Wei_CRISPRi_CD8T</td></tr>
+                <tr><td style="cursor:pointer;font-size: 15px">Ye_CRISPRi_CD8T_GBM</td></tr>
+                <tr><td style="cursor:pointer;font-size: 15px">Zhao_CRISPRi_CD8T_invitro</td></tr>
+                <tr><td style="cursor:pointer;font-size: 15px">Zhao_CRISPRi_CD8T_invivo</td></tr>
+                </tbody>
+            </table>
+
+        <table class="table" style="border-left-color: #008080;border-left-color: #008080;" id="table02">
+            <thead style="background-color: #84cce4">
+            <tr>
+                <th style="color: black;font-size: 20px">CRISPRa/ORF datasets</th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr><td style="cursor:pointer;font-size: 15px">Legut_ORFs_CD4T</td></tr>
+                <tr><td style="cursor:pointer;font-size: 15px">Legut_ORFs_CD8T</td></tr>
+                <tr><td style="cursor:pointer;font-size: 15px">Schmidt_CRISPRa_Prim_CD4_IL2</td></tr>
+                <tr><td style="cursor:pointer;font-size: 15px">Schmidt_CRISPRa_Prim_CD8_IFNG</td></tr>
+                <tr><td style="cursor:pointer;font-size: 15px">Schmidt_CRISPRa_Supp_CD4_IFNG</td></tr>
+                <tr><td style="cursor:pointer;font-size: 15px">Schmidt_CRISPRa_Supp_CD4_IL2</td></tr>
+                <tr><td style="cursor:pointer;font-size: 15px">Schmidt_CRISPRa_Supp_CD4_TNF</td></tr>
+                <tr><td style="cursor:pointer;font-size: 15px">Ye_CRISPRa_CD8T</td></tr>
+            </tbody>
+        </table>
+        </div>
+
+        <div class="col-md-9">
+            <div ng-show="rnaseq_show" class="">
+              <div ng-show="degplotshow">
+               <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="ng-binding">CRISPR screens gene/hits summary in {{ study }}</h4>
+                    </div>
+<div class="tab-content">
+  <div class="row" style="display:flex; justify-content:center; margin-top:25px;margin-bottom:25px;">
+      <img src="./static/data/img/Panel3_{{ study }}_volcano.png" width="65%" height="65%">
+    </div>
+                             <div style="height:50px;"><h5 style="text-align: center" class="ng-binding">
+                         <strong style="color: darkred">Significant postitive:</strong> {{ mageck_sigNum_up }}; <strong style="color: #2a62bc">significant negative:</strong> {{ mageck_sigNum_down }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                              <a download="mageck_result.txt" href="./static/data/extdata/mageck/{{study}}_mageck_gene_summary.txt">
+                                <button class="btn btn-default"><i class="fa fa-download" aria-hidden="true">  Download ALL</i></button>
+                              </a><br>
+                              <span style="font-size: 10px">
+                            (p.adjust < 0.05; * Negative might not match volcano from pos.lfc data, download the full result see details!)</span>
+                              </h5>
+                            </div>
+
+</div>
+                </div>
+               </div>
+
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="ng-binding">GSEA Enrichment in Biological Process (BP) Pathways</h4>
+                    </div>
+<div class="tab-content">                        
+<div id="gsea" style="width:85%;height:{{bpChartHeight}}px;margin: 0px auto;"></div>
+<script type="text/javascript">
+var chartDom = document.getElementById('gsea');
+var myChart = echarts.init(chartDom);
+var option;
+var go_bp_up_list = {{ go_bp_up_list|tojson }}
+var go_bp_down_list = {{ go_bp_down_list|tojson }}
+option = {
+  dataset: [
+    {
+      id: 'up',
+      dimensions: ['ID', 'NES','pval'],
+      source: go_bp_up_list
+    },
+    {
+      id: 'down',
+      dimensions: ['ID', 'NES','pval'],
+      source: go_bp_down_list
+    }
+  ],
+  tooltip: {
+    trigger: 'item',
+    show: true,
+    formatter: function (params) {
+      return `${params.seriesName}<br/>NES: ${params.data[1]}; pval: ${params.data[2]}`;
+    }
+  },
+  grid: {
+      top: '10%',
+      bottom: '15%',
+  },
+  legend: {
+    data: ['Positve enrichment', 'Negative enrichment']
+  },
+  xAxis: {
+    type: 'value',
+    name: 'Normalized enrich score',
+    nameLocation: 'middle',
+    nameGap: 35,
+    nameTextStyle: { fontSize: 18 },
+    axisLabel: { show: true },
+    axisTick: { show: true },
+    splitArea: {
+      show: false
+    },
+    splitLine: {
+      show: false
+    }
+  },
+  yAxis: {
+    type: 'category',
+    axisLine: { show: true },
+    axisTick: { show: false },
+    axisLabel: { show: false },
+    splitArea: { show: true },
+    splitLine: { show: true }
+  },
+  series: [
+    {
+      name: 'Positve enrichment',
+      type: 'bar',
+      stack: 'Total',
+      datasetId: 'up',
+      encode: {
+        y: 'ID',
+        x: 'NES',
+        tooltip: ['NES', 'pval']
+      },
+      label: {
+        show: true,
+        color: "black",
+        formatter: function(d) {
+          return d.name.replace(/([^\n]{1,60})/g, '$1\n');
+        },
+        position: 'inside*'
+      },
+    },
+    {
+      name: 'Negative enrichment',
+      type: 'bar',
+      stack: 'Total',
+      datasetId: 'down',
+      encode: {
+        y: 'ID',
+        x: 'NES',
+        tooltip: ['NES', 'pval']
+      },
+      label: {
+        show: true,
+        color: "black",
+        formatter: function(d) {
+          return d.name.replace(/([^\n]{1,60})/g, '$1\n');
+        },
+        position: 'inside*'
+      },
+    }
+  ]
+};
+
+option && myChart.setOption(option);
+</script>
+
+
+                            <div style="height:40px;">
+                             <h5 style="text-align: center" class="ng-binding"><strong style="color: darkred">Significant postitive:</strong> {{ gobp_sigNum_up }}; <strong style="color: #2a62bc">significant negative:</strong> {{ gobp_sigNum_down }} &nbsp;<span style="font-size: 14px">
+                            (p.adjust < 0.05 )</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                              <a download="GSEA_BP_result.tsv" href="./static/data/extdata/gsea_bp/GSEA_BP_{{study}}_result.tsv">
+                                <button class="btn btn-default"><i class="fa fa-download" aria-hidden="true">  Download ALL</i></button>
+                              </a>
+                              </h5>
+                            </div>
+
+                    
+                </div>
+            </div>
+
+               
+        </div>
+
+    </div>
+</div>
+
+<!--<script>
+$('a[data-toggle=tab').on('shown.bs.tab', function (e) {
+  window.dispatchEvent(new Event('resize'));   
+});
+</script>-->
+
+<script>
+<!--https://stackoverflow.com/questions/58968820/make-table-row-clickable-but-not-headers-only-with-javascript;https://stackoverflow.com/questions/24750623/select-a-row-from-html-table-and-send-values-onclick-of-a-button/66613806#66613806;https://stackoverflow.com/questions/41323679/how-to-send-data-to-flask-via-ajax;https://stackoverflow.com/questions/40463560/same-button-for-2-tables-selection-jquery;https://stackoverflow.com/questions/77148719/how-to-pass-the-value-of-a-variable-from-an-html-page-into-a-python-flask-backen-->
+
+// <!--for-one-table-only-->
+//   function highlight(e) {
+//     if (selected[0]) selected[0].className = '';
+//     e.target.parentNode.className = 'selected';
+
+//  $.ajax({
+//   // type : 'POST',
+//   url : "/ajaxprocess",
+//   dataType: 'json',
+//   data : {'selectRow' : $("tr.selected td:first" ).html() },
+//   success: function(data){
+//         //$('#main').text(response)
+//     data
+//     }
+// });
+// };
+// var table = document.getElementById('table01').querySelector('tbody'),
+// selected = table.getElementsByClassName('selected');
+// table.onclick = highlight;
+// <!--for-one-table-only-->
+ var flag;
+  function highlight(e) {
+    if (selected1[0]) {
+     selected1[0].className = '';
+     flag = '1';
+   } else if (selected2[0]) {
+     selected2[0].className = '';
+     flag = '0';
+   }
+    e.target.parentNode.className = 'selected';
+
+    var form = document.createElement("form");
+    form.setAttribute("method", "get");
+    form.setAttribute("action", "/crispr");
+
+    var input = document.createElement("input");
+    input.setAttribute("type", "hidden");
+    input.setAttribute("name", "study");
+    input.setAttribute("value", $("tr.selected td:first" ).html());
+
+    form.appendChild(input);
+    document.body.appendChild(form);
+    form.submit();
+};
+
+var table1 = document.getElementById('table01').querySelector('tbody'),
+selected1 = table1.getElementsByClassName('selected');
+
+var table2 = document.getElementById('table02').querySelector('tbody'),
+selected2 = table2.getElementsByClassName('selected');
+
+table1.onclick = highlight;
+table2.onclick = highlight;
+</script>
+
+{% endblock content %}

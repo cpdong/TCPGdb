@@ -1,0 +1,285 @@
+{% extends '/base.html' %}
+
+{% block headContent %}
+    <title>TCPGdb</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.js"></script>
+{% endblock %}
+
+
+{% block navContent %}
+<li><a href="{{ url_for('datasets') }}"><strong>Datasets Summary</strong></a></li>
+<li><a href="{{ url_for('crispr') }}"><strong>T-Screen</strong></a></li>
+<li><a href="{{ url_for('score') }}"><strong>TPS-score</strong></a></li>
+<li><a href="{{ url_for('search') }}"><strong>T-GEXP</strong></a></li>
+<li><a href="{{ url_for('document') }}"><strong>Document</strong></a></li>
+<li><a href="{{ url_for('contact') }}"><strong>Contact</strong></a></li>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="row">
+    <!-- ngView: --><div ng-view="" class="ng-scope">
+<div class="container-fluid ng-scope">
+   <div class="row" style="margin-top: 3px;margin-bottom: 3px">
+       <div class="col-md-6">
+        <div class="panel" style="min-height: 300px;width:100%; overflow: hidden; border-color: #5bc0de">
+            <div class="panel-heading" style="background-color: #84cce4">
+                <h4>
+                    <span class="glyphicon glyphicon-bullhorn"> </span> Welcome to the T Cell Perturbation Genomics database (TCPGdb)!
+                </h4>
+            </div>
+            <div class="panel-body">
+              <div class="col-md-7">
+                <p style="font-family:  Times, serif; font-size: 18px; text-align: justify;text-justify: inter-character">
+                    TCPG (T Cell Perturbation Genomics database) is a database providing comprehensive resources and functional analysis for searching potential T cell gene. It collected the best CRISPR  genome wide screen dataset for priotizing the overall gene function by aggregating result from multi-studies. It also include gene iinformation in T-ALL cancer prognosis. It is the first database for systematically investigating T cell gene functions and we aim to provide useful data and clues for T cell based therapy related clinical research.<br>
+                </p>
+              </div>
+              <div class="col-md-5">
+                <div id="data_cartoon" style="width: auto;height: 200px;"></div>
+                  <script type="text/javascript">
+                  var chartDom = document.getElementById('data_cartoon');
+                  var myChart = echarts.init(chartDom);
+                  var option;
+                  option = {
+                    tooltip: {show: false},
+                    series: [
+                      {
+                        type: 'graph',
+                        layout: 'force',
+                        animation: false,
+                        label: {
+                          show: true,
+                          fontSize: 12,
+                          fontWeight: 'bold',
+                          color: '#2f4554',
+                          position: 'right',
+                          formatter: '{b}'
+                        },
+                        draggable: true,
+                        data: [
+                          { name: 'Screen', symbolSize: 80, itemStyle: { color: '#c23531'} },
+                          { name: 'Expression', symbolSize: 40, itemStyle: { color: '#bda29a'} },
+                          { name: 'Autoimmune', symbolSize: 40, itemStyle: { color: '#1e81b0'} },
+                          { name: 'CAR-T data', symbolSize: 40, itemStyle: { color: 'green'} },
+                          { name: 'T-Cancers', symbolSize: 40, itemStyle: { color: 'orange'} }
+                        ],
+                        force: {
+                            edgeLength: 80,
+                            repulsion: 200,
+                            gravity: 0.1
+                          },
+                        edges: [
+                          { source: 'Screen', target: 'Expression' },
+                          { source: 'Screen', target: 'Autoimmune' },
+                          { source: 'Screen', target: 'CAR-T data' },
+                          { source: 'Screen', target: 'T-Cancers' }
+                        ],
+                      }
+                    ]
+                  };
+                  option && myChart.setOption(option);
+                  window.addEventListener("resize", function() {// adjust windows sizes
+                  myChart.resize();}); 
+                  </script>
+              </div>
+            </div>
+         </div>
+           <div class="panel" style="height: 340px;width:100%;border-color: #5bc0de">
+              <div class="panel-heading" style="background-color: #84cce4">
+                <h4>
+                    <span class="glyphicon glyphicon-signal"> </span> Data Summary
+                </h4>
+              </div>
+
+                   <div class="list-group">
+                        <button class="list-group-item">
+                            <span style="font-family: Times, serif; font-size: 18px;"><strong><font color="#eb5424">1. Source:</font></strong> </span><span style="font-family: Times, serif; font-size: 18px;">NCBI GEO, NCBI SRA, PubMed.</span>
+                        </button>
+                        <button class="list-group-item">
+                            <span style="font-family: Times, serif; font-size: 18px;"><strong><font color="#eb5424">2. CRISPR Datasets:</font></strong> </span> <span style="font-family: Times, serif; font-size: 18px;">35 datasets (GEO/literatures).</span>
+                        </button>
+                        <button class="list-group-item">
+                            <span style="font-family: Times, serif; font-size: 18px;"><strong><font color="#eb5424">3. Expression Datasets:</font></strong> </span> <span style="font-family: Times, serif; font-size: 18px;">Sorted T cell, CAR-T cell, T cell cancer and autoimmune diseases expression. </span>
+                        </button>
+                        <button class="list-group-item">
+                            <span style="font-family: Times, serif; font-size: 18px;"><strong><font color="#eb5424">4. T cell types: </font></strong> </span> <span style="font-family: Times, serif; font-size: 18px;">4 types (CD8 T, CD4 T, Treg, and CAR-T cells)</a>. </span>
+                        </button>
+                        <button class="list-group-item">
+                            <span style="font-family: Times, serif; font-size: 18px;"><strong><font color="#eb5424">5. Species & Protocls: </font></strong></span> <span style="font-family: Times, serif; font-size: 18px;">Human/Mouse, in vitro/in vivo.</span>
+                        </button>
+                        <button class="list-group-item">
+                            <span style="font-family: Times, serif; font-size: 18px;"><strong><font color="#eb5424">6. Procedures: </font></strong> </span> <span style="font-family: Times, serif; font-size: 18px;">MAGeCK, GO, GSEA, T cell abundance and survival associations.</span>
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+
+
+       <div class="col-md-6">
+                    <div class="thumbnail" id="demo" style="font-size: 16px; min-height: 640px; width: 100%; border-color: rgb(91, 192, 222); -webkit-tap-highlight-color: transparent; user-select: none; position: relative;"></div>
+<script type="text/javascript">
+var chartDom = document.getElementById('demo');
+var myChart = echarts.init(chartDom);
+var option;
+
+option = {
+  dataset: {
+    source: [
+['Study','Celltype','Approach','Method','Species','NumGene','CelltypeIndex'],
+['Cortez_CRISPRko_Treg','Treg','in vitro','loss-of-function','mouse','491',3],
+['Dai_CRISPRko_CART_CD4T','CAR-T','in vitro','loss-of-function','human','899',4],
+['Dai_CRISPRko_CART_CD8T','CAR-T','in vitro','loss-of-function','human','899',4],
+['Arce_CRISPRi_Treg_IL2RA','Treg','in vitro','loss-of-function','human','1349',1],
+['Arce_CRISPRi_CD4T_StimEff_IL2RA','CD4 T','in vitro','loss-of-function','human','1349',1],
+['Arce_CRISPRi_CD4T_RestEff_IL2RA','CD4 T','in vitro','loss-of-function','human','1349',1],
+['Freimer_CRISPRko_CD4T_IL2RA','CD4 T','in vitro','loss-of-function','human','1381',1],
+['Freimer_CRISPRko_CD4T_IL2','CD4 T','in vitro','loss-of-function','human','1381',1],
+['Freimer_CRISPRko_CD4T_CTLA4','CD4 T','in vitro','loss-of-function','human','1381',1],
+['Ye_CRISPRko_CD8T_GBM','CD8 T','in vivo','loss-of-function','mouse','1657',2],
+['Wei_CRISPRko_CD8T','CD8 T','in vivo','loss-of-function','mouse','3017',2],
+['Legut_ORFs_CD4T','CD4 T','in vitro','gain-of-function','human','11608',1],
+['Legut_ORFs_CD8T','CD8 T','in vitro','gain-of-function','human','11608',2],
+['Belk_CRISPRko_CD8T','CD8 T','in vitro','loss-of-function','mouse','18421',2],
+['Wang_CRISPRko_CART','CAR-T','in vitro','loss-of-function','human','18904',4],
+['Schmidt_CRISPRa_CD8T_IFNG_Prim','CD8 T','in vitro','gain-of-function','human','18930',2],
+['Schmidt_CRISPRa_CD4T_IL2_Prim','CD4 T','in vitro','gain-of-function','human','18930',1],
+['Schmidt_CRISPRa_CD4T_IL2_Supp','CD4 T','in vitro','gain-of-function','human','18930',1],
+['Schmidt_CRISPRa_CD4T_IFNG_Supp','CD4 T','in vitro','gain-of-function','human','18930',1],
+['Schmidt_CRISPRa_CD4T_TNF_Supp','CD4 T','in vitro','gain-of-function','human','18930',1],
+['Ye_CRISPRa_CD8T','CD8 T','in vitro','gain-of-function','mouse','18932',2],
+['Schmidt_CRISPRi_CD4T_IL2_Prim','CD4 T','in vitro','loss-of-function','human','18939',1],
+['Schmidt_CRISPRi_CD8T_IFNG_Prim','CD8 T','in vitro','loss-of-function','human','18939',2],
+['Carnevale_CRISPRko_Tcell','T cell','in vitro','loss-of-function','human','19112',0],
+['Carnevale_CRISPRko_Treg','Treg','in vitro','loss-of-function','human','19112',3],
+['Shifrut_CRISPRko_CD8T','CD8 T','in vitro','loss-of-function','human','19114',2],
+['Zhao_CRISPRko_CD8T_invitro','CD8 T','in vitro','loss-of-function','mouse','19642',2],
+['Zhao_CRISPRko_CD8T_invivo','CD8 T','in vivo','loss-of-function','mouse','19642',2],
+['Long_CRISPRko_Treg_metabolic','Treg','in vitro','loss-of-function','mouse','19642',3],
+['Loo_CRISPRko_Treg_Expand','Treg','in vitro','loss-of-function','mouse','19668',3],
+['Loo_CRISPRko_Treg_Foxp3','Treg','in vitro','loss-of-function','mouse','19668',3],
+['Lin_CRISPRko_CD8T_persistence','CD8 T','in vitro','loss-of-function','mouse','19674',2],
+['Lin_CRISPRko_CD8T_proliferate','CD8 T','in vitro','loss-of-function','mouse','19674',2],
+['Lin_CRISPRko_CD8T_survival','CD8 T','in vitro','loss-of-function','mouse','19674',2],
+['Szeto_CRISPRko_CD4T','CD4 T','in vitro','loss-of-function','mouse','19674',1]
+    ]
+  },
+  grid: {
+    left: '2%',
+    right: '40%',
+    top: '10%',
+    bottom: '5%',
+    containLabel: true
+  },
+  title: [
+    {
+      text: 'T cell genome wide CRISPR perturbation datasets',
+      left: '45%',
+      top: 15,
+      textAlign: 'center'
+    }
+  ],
+  tooltip: {
+    show: true
+  },
+  xAxis: {
+    type: 'value',
+    position: 'bottom',
+    axisLine: { show: true },
+    axisTick: { show: true },
+    axisLabel: { show: true, fontSize: 12,
+      formatter: (function(value){
+        let label;
+        if (value % 6000 == 0){ 
+          label = value;
+        }
+        else {
+          label = '';
+        }
+        return label;
+      })
+    },
+    splitLine: { show: false },
+    scale: true,
+    name: 'Gene coverage',
+    nameLocation: 'middle',
+    nameGap: 25,
+    nameTextStyle: {
+      fontSize: 15
+    }
+  },
+  yAxis: {
+    type: 'category',
+    axisLine: { show: true },
+    axisTick: { show: false },
+    axisLabel: {
+      interval: 0,
+      rotate: 0,
+      fontSize: 12
+    },
+    splitLine: { show: false }
+  },
+  visualMap: {
+    top: 'middle',
+    min: 0,
+    max: 4,
+    left: 30,
+    splitNumber: 5,
+    dimension: 6,
+    inRange: {
+      color: ['#37A2DA', '#e06343', '#37a354', '#b55dba', '#b5bd48']
+    },
+    show: false
+  },
+  series: [
+    {
+      type: 'bar',
+      encode: {
+        // Map the "amount" column to X axis.
+        x: 'NumGene',
+        // Map the "product" column to Y axis
+        y: 'Study',
+        tooltip: ['Method', 'Approach', 'Species']
+      }
+    },
+    {
+      type: 'pie',
+      radius: [0, '25%'],
+      center: ['75%', '40%'],
+      label: { fontSize: 15 },
+      data: [
+        {
+          name: 'T cell',
+          value: 1,
+          itemStyle: { normal: { color: '#37A2DA' } }
+        },
+        {
+          name: 'CD4 T',
+          value: 12,
+          itemStyle: { normal: { color: '#e06343' } }
+        },
+        {
+          name: 'CD8 T',
+          value: 13,
+          itemStyle: { normal: { color: '#37a354' } }
+        },
+        { name: 'Treg', value: 6, itemStyle: { normal: { color: '#b55dba' } } },
+        { name: 'CAR-T', value: 3, itemStyle: { normal: { color: '#b5bd48' } } }
+      ]
+    }
+  ]
+};
+
+option && myChart.setOption(option);
+
+window.addEventListener("resize", function() {// adjust windows sizes https://www.jb51.net/article/269964.htm
+                  myChart.resize();});  
+</script>
+
+        </div>
+</div>
+
+
+{% endblock content %}

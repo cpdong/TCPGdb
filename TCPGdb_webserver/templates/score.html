@@ -1,0 +1,1736 @@
+{% extends '/base.html' %}
+
+{% block headContent %}
+    <title>TPS-score | TCPGdb</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+
+
+{% endblock %}
+
+{% block navContent %}
+<li><a href="{{ url_for('datasets') }}"><strong>Datasets Summary</strong></a></li>
+<li><a href="{{ url_for('crispr') }}"><strong>T-Screen</strong></a></li>
+<li><a href="{{ url_for('score') }}"><strong><span style="color: #ffffff;">TPS-score</span></strong></a></li>
+<li><a href="{{ url_for('search') }}"><strong>T-GEXP</strong></a></li>
+<li><a href="{{ url_for('document') }}"><strong>Document</strong></a></li>
+<li><a href="{{ url_for('contact') }}"><strong>Contact</strong></a></li>
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="row" style="margin-left:5px;margin-right:5px">
+    <!-- ngView: --><div ng-view="" class="ng-scope"><!--<div class="container" >-->
+<div class="row ng-scope" style="margin-left:200px;margin-right:300px">
+           <div class="bs-callout bs-callout-info" style="margin-top: 10px;margin-bottom: 10px;">
+                <div class="description">
+                    <span class="glyphicon glyphicon-eye-open" style="color: #335238;"> </span><strong style="line-height : 30px ;font-size:20px;color: #335238;font-family: Times, serif;"> T cell perturbation score (TPS) </strong>
+                           <p style="font-family: Times New Roman; font-size: 18px; text-align: justify;text-justify: inter-character">
+                          <span class="glyphicon glyphicon-warning-sign" style="color: #335238;"> </span> <span style="line-height : 30px ;font-size:18px;color: #335238;font-family: Times, serif;">
+                            We adopted a robust rank aggregation score system to systematically measure the impact power of gene perturbation on T cells from various dataset level, <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TPS = 0.2 * -lg(RobustRankAgg rho)<br>&nbsp;&nbsp;&nbsp;&nbsp;The measurement of TPS-score was in a range of 0 - 1. </span><br>
+                           <span class="glyphicon glyphicon-warning-sign" style="color: #335238;"> </span> <span style="line-height : 30px ;font-size:18px;color: #335238;font-family: Times, serif;">
+                            Genes with large TPS-scroe indicates the high expression of which may contribute to enhancing T cell functions therapy, while genes with small TPS-score associate with less impacts on T cell functions. 
+                            The TPS-scores provides researchers the degree of overall genes impacting on shaping T cell functionalities.</span>
+                </p></div>
+
+
+        <hr>
+
+
+        <div ng-show="one" style="margin-bottom: 25px; padding-left:45px;">
+        <form action="{{ url_for('score') }}" class="searchform" method="post">
+            <div class="form-group" style="display:flex;">
+                <label style="font-size:16px;width:130px;text-align:right;padding-right:5px;display:block;">Perturb method:</label>
+                <select id="pert_method" name="pert_method" class="form-control" style="width:300px;padding-left:10px;">
+                    <option value="activate" selected="">Activation(default)</option>
+                    <option value="knockout">Knockout</option>
+                </select>
+            </div>
+            <div class="form-group" style="display:flex;">
+                <label style="font-size:16px;width:130px;text-align:right;padding-right:5px;display:block;">Gene symbol:</label>
+                <input autocomplete="off" class="form-control search" id="tscore_gene" name="t_gene" placeholder="Eg. PDCD1" required="required" type="text" style="width:300px;padding-left:10px;">
+            </div>
+            <div class="form-group">
+                <div style="margin-top:10px;padding-left:130px;">
+                    <button class="btn btn-primary" id="search_button" type="submit" ng-click="basic_search_gene()" style="width:120px;height:40px;padding:0px;font-size:20px;">Search</button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                    <button class="btn btn-danger" id="reset_button" type="reset" style="width:120px;height:40px;padding:0px;font-size:20px;" onclick="window.location.href = '{{ search }}' ; ">Reset</button>
+                </div>
+            </div>
+        </form>
+            </div>
+</div>
+
+
+<div style="display:{{ showDiv }}">
+  <div class="panel panel-default">
+     <div class="panel-heading">
+     <h4>T cell perturbation score of {{ realname }} [ {{ pert_method }} ] for augment functions</h4></div>
+<div class="row" style="width:95%;height:250px;">
+  <div class="col-md-3" style="max-height:220px;overflow:hidden;">
+    <div style="text-align:center;"><h4>CD8 T cells</h4></div>
+<div id="main1" style="width: 250px;height:200px;margin:0px;padding:0px;"></div>
+<script type="text/javascript">
+var chartDom = document.getElementById('main1');
+var myChart = echarts.init(chartDom);
+var option;
+var tscore_dash_cd8t = {{ tscore_dash_cd8t|tojson }}
+
+option = {
+  grid: {
+    top: 0,
+    bottom: '-50%',
+    left: 0,
+    right: 0,
+  },
+  series: [
+    {
+      type: 'gauge',
+      startAngle: 180,
+      endAngle: 0,
+      center: ['55%', '70%'],
+      radius: '100%',
+      min: 0,
+      max: 1,
+      splitNumber: 10,
+      axisLine: {
+        lineStyle: {
+          width: 7,
+          color: [
+            [0.26, '#f77b33'],
+            [0.4, '#c4d94c'],
+            [0.6, '#69ca3d'],
+            [0.8, '#1ea546'],
+            [1, '#00927f']
+          ]
+        }
+      },
+      pointer: {
+        length: '42%',
+        width: 4,
+        offsetCenter: [0, '-35%'],
+        itemStyle: { color: 'auto' }
+      },
+      axisTick: {
+        length: 6,
+        lineStyle: { color: 'auto', width: 1,}
+      },
+      splitLine: {
+        length: 12,
+        lineStyle: { color: 'auto', width: 2 }
+      },
+      axisLabel: {
+        color: '#464646',
+        fontSize: 16,
+        distance: -30,
+        rotate: 'tangential',
+        formatter: function (value) {
+          if (value === 0) {
+            return '0';
+          } else if (value === 0.2) {
+            return '0.2';
+          } else if (value === 0.4) {
+            return '0.4';
+          } else if (value === 0.6) {
+            return '0.6';
+          } else if (value === 0.8) {
+            return '0.8';
+          } else if (value === 1) {
+            return '1';
+          }
+          return '';
+        }
+      },
+      title: {
+        offsetCenter: [0, '5%'],
+      },
+      detail: {
+        fontSize: 24,
+        offsetCenter: [0, '-10%'],
+        valueAnimation: true,
+        formatter: function (value) {
+          return value.toFixed(2) + '';
+        },
+        color: 'grey'
+      },
+      data: [
+        {
+          value: tscore_dash_cd8t,
+        }
+      ]
+    }
+  ]
+};
+option && myChart.setOption(option);
+</script>
+  </div>
+
+  <div class="col-md-3" style="max-height:220px;overflow:hidden;">
+    <div style="text-align:center;"><h4>CD4 T cells</h4></div>
+<div id="main2" style="width: 250px;height:200px;margin:0px;padding:0px;"></div>
+<script type="text/javascript">
+var chartDom = document.getElementById('main2');
+var myChart = echarts.init(chartDom);
+var option;
+var tscore_dash_cd4t = {{ tscore_dash_cd4t|tojson }}
+
+option = {
+  grid: {
+    top: 0,
+    bottom: '-50%',
+    left: 0,
+    right: 0,
+  },
+  series: [
+    {
+      type: 'gauge',
+      startAngle: 180,
+      endAngle: 0,
+      center: ['55%', '70%'],
+      radius: '100%',
+      min: 0,
+      max: 1,
+      splitNumber: 10,
+      axisLine: {
+        lineStyle: {
+          width: 7,
+          color: [
+            [0.26, '#f77b33'],
+            [0.4, '#c4d94c'],
+            [0.6, '#69ca3d'],
+            [0.8, '#1ea546'],
+            [1, '#00927f']
+          ]
+        }
+      },
+      pointer: {
+        length: '42%',
+        width: 4,
+        offsetCenter: [0, '-35%'],
+        itemStyle: { color: 'auto' }
+      },
+      axisTick: {
+        length: 6,
+        lineStyle: { color: 'auto', width: 1,}
+      },
+      splitLine: {
+        length: 12,
+        lineStyle: { color: 'auto', width: 2 }
+      },
+      axisLabel: {
+        color: '#464646',
+        fontSize: 16,
+        distance: -30,
+        rotate: 'tangential',
+        formatter: function (value) {
+          if (value === 0) {
+            return '0';
+          } else if (value === 0.2) {
+            return '0.2';
+          } else if (value === 0.4) {
+            return '0.4';
+          } else if (value === 0.6) {
+            return '0.6';
+          } else if (value === 0.8) {
+            return '0.8';
+          } else if (value === 1) {
+            return '1';
+          }
+          return '';
+        }
+      },
+      detail: {
+        fontSize: 24,
+        offsetCenter: [0, '-10%'],
+        valueAnimation: true,
+        formatter: function (value) {
+          return value.toFixed(2) + '';
+        },
+        color: 'grey'
+      },
+      data: [
+        {
+          value: tscore_dash_cd4t,
+        }
+      ]
+    }
+  ]
+};
+option && myChart.setOption(option);
+</script>
+
+  </div>
+
+    <div class="col-md-3" style="max-height:220px;overflow:hidden;">
+    <div style="text-align:center;"><h4>Treg cells</h4></div>
+<div id="main3" style="width: 250px;height:200px;margin:0px;padding:0px;"></div>
+<script type="text/javascript">
+var chartDom = document.getElementById('main3');
+var myChart = echarts.init(chartDom);
+var option;
+var tscore_dash_treg = {{ tscore_dash_treg|tojson }}
+
+option = {
+  grid: {
+    top: 0,
+    bottom: '-50%',
+    left: 0,
+    right: 0,
+  },
+  series: [
+    {
+      type: 'gauge',
+      startAngle: 180,
+      endAngle: 0,
+      center: ['55%', '70%'],
+      radius: '100%',
+      min: 0,
+      max: 1,
+      splitNumber: 10,
+      axisLine: {
+        lineStyle: {
+          width: 7,
+          color: [
+            [0.26, '#f77b33'],
+            [0.4, '#c4d94c'],
+            [0.6, '#69ca3d'],
+            [0.8, '#1ea546'],
+            [1, '#00927f']
+          ]
+        }
+      },
+      pointer: {
+        length: '42%',
+        width: 4,
+        offsetCenter: [0, '-35%'],
+        itemStyle: { color: 'auto' }
+      },
+      axisTick: {
+        length: 6,
+        lineStyle: { color: 'auto', width: 1,}
+      },
+      splitLine: {
+        length: 12,
+        lineStyle: { color: 'auto', width: 2 }
+      },
+      axisLabel: {
+        color: '#464646',
+        fontSize: 16,
+        distance: -30,
+        rotate: 'tangential',
+        formatter: function (value) {
+          if (value === 0) {
+            return '0';
+          } else if (value === 0.2) {
+            return '0.2';
+          } else if (value === 0.4) {
+            return '0.4';
+          } else if (value === 0.6) {
+            return '0.6';
+          } else if (value === 0.8) {
+            return '0.8';
+          } else if (value === 1) {
+            return '1';
+          }
+          return '';
+        }
+      },
+      detail: {
+        fontSize: 24,
+        offsetCenter: [0, '-10%'],
+        valueAnimation: true,
+        formatter: function (value) {
+          return value.toFixed(2) + '';
+        },
+        color: 'grey'
+      },
+      data: [
+        {
+          value: tscore_dash_treg,
+        }
+      ]
+    }
+  ]
+};
+option && myChart.setOption(option);
+</script>
+  </div>
+
+    <div class="col-md-3">
+    <div style="text-align:center;"><h4>CAR-T cells</h4></div>
+<div id="main4" style="width: 250px;height:200px;margin:0px;padding:0px;"></div>
+<script type="text/javascript">
+var chartDom = document.getElementById('main4');
+var myChart = echarts.init(chartDom);
+var tscore_dash_cart = {{ tscore_dash_cart|tojson }}
+
+var option;
+option = {
+  grid: {
+    top: 0,
+    bottom: '-50%',
+    left: 0,
+    right: 0,
+  },
+  series: [
+    {
+      type: 'gauge',
+      startAngle: 180,
+      endAngle: 0,
+      center: ['55%', '70%'],
+      radius: '100%',
+      min: 0,
+      max: 1,
+      splitNumber: 10,
+      axisLine: {
+        lineStyle: {
+          width: 7,
+          color: [
+            [0.26, '#f77b33'],
+            [0.4, '#c4d94c'],
+            [0.6, '#69ca3d'],
+            [0.8, '#1ea546'],
+            [1, '#00927f']
+          ]
+        }
+      },
+      pointer: {
+        length: '42%',
+        width: 4,
+        offsetCenter: [0, '-35%'],
+        itemStyle: { color: 'auto' }
+      },
+      axisTick: {
+        length: 6,
+        lineStyle: { color: 'auto', width: 1,}
+      },
+      splitLine: {
+        length: 12,
+        lineStyle: { color: 'auto', width: 2 }
+      },
+      axisLabel: {
+        color: '#464646',
+        fontSize: 16,
+        distance: -30,
+        rotate: 'tangential',
+        formatter: function (value) {
+          if (value === 0) {
+            return '0';
+          } else if (value === 0.2) {
+            return '0.2';
+          } else if (value === 0.4) {
+            return '0.4';
+          } else if (value === 0.6) {
+            return '0.6';
+          } else if (value === 0.8) {
+            return '0.8';
+          } else if (value === 1) {
+            return '1';
+          }
+          return '';
+        }
+      },
+      detail: {
+        fontSize: 24,
+        offsetCenter: [0, '-10%'],
+        valueAnimation: true,
+        formatter: function (value) {
+          return value.toFixed(2) + '';
+        },
+        color: 'grey'
+      },
+      data: [
+        {
+          value: tscore_dash_cart,
+        }
+      ]
+    }
+  ]
+};
+option && myChart.setOption(option);
+</script>
+
+  </div> 
+</div>
+
+<hr>
+<div style="display:flex;">
+  <div style="width:720px;">
+    <div style="text-align:center;"><h4>CD8T cell datasets</h4></div>
+<div id="main5" style="width: 680px;height:360px;"></div>
+<script type="text/javascript">
+var chartDom = document.getElementById('main5');
+var myChart = echarts.init(chartDom);
+var option;
+var zlfc_cd8t_list = {{ zlfc_cd8t_list|tojson }}
+
+option = {
+  dataset: [
+    {
+      id: 'boxpltData',
+      dimensions: [ 'Study', 'min', 'Q1', 'median', 'Q3', 'max', 'log2FC Z-score', 'Gene' ],
+      source: zlfc_cd8t_list
+    }
+  ],
+  tooltip: {
+    trigger: 'axis',
+    confine: true
+  },
+  xAxis: {
+    name: 'log2FC Z-score',
+    nameLocation: 'middle',
+    nameGap: 25,
+    nameTextStyle: { fontSize: 15 },
+    scale: true,
+    axisLabel: { fontSize: 15 },
+    splitArea: {
+      show: false
+    },
+    splitLine: {
+      show: false
+    }
+  },
+  yAxis: {
+    type: 'category',
+    axisTick: { show: false },
+    axisLabel: { fontSize: 12 },
+    splitArea: {
+      show: true
+    },
+    splitLine: {
+      show: true
+    }
+  },
+  grid: {
+    top: 0,
+    bottom: 60,
+    left: 240
+  },
+  series: [
+    {
+      type: 'boxplot',
+      silent: true,
+      emphasis: {
+        disabled: true
+      },
+      tooltip: {
+        show: false
+      },
+      datasetId: 'boxpltData',
+      itemStyle: {
+        color: '#b8c5f2'
+      },
+      encode: {
+        x: ['min', 'Q1', 'median', 'Q3', 'max'],
+        y: 'Study'
+      }
+    },
+    {
+      /// name: 'logFC Z-score',///
+      type: 'scatter',
+      datasetId: 'boxpltData',
+      symbolSize: 10,
+      tooltip: {
+        trigger: 'item'
+      },
+      itemStyle: {
+        color: '#d00000'
+      },
+      encode: {
+        x: 'log2FC Z-score',
+        y: 'Study',
+        itemName: 'Gene',
+        tooltip: ['log2FC Z-score']
+      }
+    }
+  ]
+};
+option && myChart.setOption(option);
+</script>
+</div>
+
+<div style="width:400px;">
+<div id="main6" style="width: 400px;height:330px;"></div>
+<script type="text/javascript">
+var chartDom = document.getElementById('main6');
+var myChart = echarts.init(chartDom);
+var option;
+var tscore_cd8t = {{ tscore_cd8t|tojson }}
+
+option = {
+  tooltip: {
+    trigger: 'axis'
+  },
+  radar: [ /// red item #bf444c  area #d88273 /// green #91cc75 #bbe9a6 /// blue #5470c6 #8ca2e4 /// skyblue #73c0de #a4e0f7
+    {
+      name: {
+        textStyle: {
+          fontSize: 18,
+          color: 'black'
+        }
+      },
+      indicator: [
+        { text: 'proliferation', max: 1 },
+        { text: 'killing', max: 1 },
+        { text: 'infiltration', max: 1 },
+        { text: 'persistence', max: 1 },
+        { text: 'survival', max: 1 },
+        { text: 'IFNG', max: 1 }
+      ],
+      center: ['50%', '50%'],
+      radius: '50%',
+    }
+  ],
+  series: [
+    {
+      name: 'T perturb score',
+      type: 'radar',
+      tooltip: {
+        trigger: 'item'
+      },
+      itemStyle: { color: '#5470c6' },
+      areaStyle: { color: '#fff', opacity: 0 },
+      data: [
+        {
+          value: tscore_cd8t
+        }
+      ]
+    }
+  ]
+};
+option && myChart.setOption(option);
+</script>
+  </div>
+</div>
+
+<hr>
+
+<div style="display:flex;">
+  <div style="width:720px;height:320px;">
+    <div style="text-align:center;"><h4>CD4T cell datasets</h4></div>
+<div id="main7" style="width: 680px;height:300px;"></div>
+<script type="text/javascript">
+var chartDom = document.getElementById('main7');
+var myChart = echarts.init(chartDom);
+var option;
+var zlfc_cd4t_list = {{ zlfc_cd4t_list|tojson }}
+
+option = {
+  dataset: [
+    {
+      id: 'boxpltData',
+      dimensions: [ 'Study', 'min', 'Q1', 'median', 'Q3', 'max', 'log2FC Z-score', 'Gene' ],
+      source: zlfc_cd4t_list
+    }
+  ],
+  tooltip: {
+    trigger: 'axis',
+    confine: true
+  },
+  xAxis: {
+    name: 'log2FC Z-score',
+    nameLocation: 'middle',
+    nameGap: 25,
+    nameTextStyle: { fontSize: 15 },
+    scale: true,
+    axisLabel: { fontSize: 15 },
+    splitArea: {
+      show: false
+    },
+    splitLine: {
+      show: false
+    }
+  },
+  yAxis: {
+    type: 'category',
+    axisTick: { show: false },
+    axisLabel: { fontSize: 12 },
+    splitArea: {
+      show: true
+    },
+    splitLine: {
+      show: true
+    }
+  },
+  grid: {
+    top: 0,
+    bottom: 60,
+    left: 240
+  },
+  series: [
+    {
+      type: 'boxplot',
+      silent: true,
+      emphasis: {
+        disabled: true
+      },
+      tooltip: {
+        show: false
+      },
+      datasetId: 'boxpltData',
+      itemStyle: {
+        color: '#b8c5f2'
+      },
+      encode: {
+        x: ['min', 'Q1', 'median', 'Q3', 'max'],
+        y: 'Study'
+      }
+    },
+    {
+      /// name: 'logFC Z-score',///
+      type: 'scatter',
+      datasetId: 'boxpltData',
+      symbolSize: 10,
+      tooltip: {
+        trigger: 'item'
+      },
+      itemStyle: {
+        color: '#d00000'
+      },
+      encode: {
+        x: 'log2FC Z-score',
+        y: 'Study',
+        itemName: 'Gene',
+        tooltip: ['log2FC Z-score']
+      }
+    }
+  ]
+};
+option && myChart.setOption(option);
+</script>
+</div>
+
+<div style="width:400px;">
+<div id="main8" style="width: 400px;height:300px;"></div>
+<script type="text/javascript">
+var chartDom = document.getElementById('main8');
+var myChart = echarts.init(chartDom);
+var option;
+var tscore_cd4t = {{ tscore_cd4t|tojson }}
+
+option = {
+  tooltip: {
+    trigger: 'axis'
+  },
+  radar: [ /// red item #bf444c  area #d88273 /// green #91cc75 #bbe9a6 /// blue #5470c6 #8ca2e4 /// skyblue #73c0de #a4e0f7
+    {
+      name: {
+        textStyle: {
+          fontSize: 18,
+          color: 'black'
+          ///backgroundColor: '#999',
+          ///borderRadius: 5,
+          ///padding: [3, 5]
+        }
+      },
+      indicator: [
+        { text: 'IL2', max: 1 },
+        { text: 'IFNG', max: 1 },
+        { text: 'TNF', max: 1 },
+        { text: 'proliferation', max: 1 },
+        { text: 'differentiation', max: 1 },
+        { text: 'CTLA-4', max: 1 },
+        { text: 'IL2RA', max: 1 },
+      ],
+      center: ['54%', '60%'],
+      radius: '70%',
+    }
+  ],
+  series: [
+    {
+      name: 'T perturb score',
+      type: 'radar',
+      tooltip: {
+        trigger: 'item'
+      },
+      itemStyle: { color: '#91cc75' },
+      areaStyle: { color: '#fff', opacity: 0 },
+      data: [
+        {
+          value: tscore_cd4t
+        }
+      ]
+    }
+  ]
+};
+
+option && myChart.setOption(option);
+</script>
+  </div>
+</div>
+
+<hr>
+
+<div style="display:flex;">
+  <div style="width:720px;height:220px;">
+    <div style="text-align:center;"><h4>Treg datasets</h4></div>
+<div id="main9" style="width: 680px;height:185px;"></div>
+<script type="text/javascript">
+var chartDom = document.getElementById('main9');
+var myChart = echarts.init(chartDom);
+var option;
+var zlfc_treg_list = {{ zlfc_treg_list|tojson }}
+
+option = {
+  dataset: [
+    {
+      id: 'boxpltData',
+      dimensions: [ 'Study', 'min', 'Q1', 'median', 'Q3', 'max', 'log2FC Z-score', 'Gene' ],
+      source: zlfc_treg_list
+    }
+  ],
+  tooltip: {
+    trigger: 'axis',
+    confine: true
+  },
+  xAxis: {
+    name: 'log2FC Z-score',
+    nameLocation: 'middle',
+    nameGap: 25,
+    nameTextStyle: { fontSize: 15 },
+    scale: true,
+    axisLabel: { fontSize: 15 },
+    splitArea: {
+      show: false
+    },
+    splitLine: {
+      show: false
+    }
+  },
+  yAxis: {
+    type: 'category',
+    axisTick: { show: false },
+    axisLabel: { fontSize: 12 },
+    splitArea: {
+      show: true
+    },
+    splitLine: {
+      show: true
+    }
+  },
+  grid: {
+    top: 0,
+    bottom: 60,
+    left: 240
+  },
+  series: [
+    {
+      type: 'boxplot',
+      silent: true,
+      emphasis: {
+        disabled: true
+      },
+      tooltip: {
+        show: false
+      },
+      datasetId: 'boxpltData',
+      itemStyle: {
+        color: '#b8c5f2'
+      },
+      encode: {
+        x: ['min', 'Q1', 'median', 'Q3', 'max'],
+        y: 'Study'
+      }
+    },
+    {
+      /// name: 'logFC Z-score',///
+      type: 'scatter',
+      datasetId: 'boxpltData',
+      symbolSize: 10,
+      tooltip: {
+        trigger: 'item'
+      },
+      itemStyle: {
+        color: '#d00000'
+      },
+      encode: {
+        x: 'log2FC Z-score',
+        y: 'Study',
+        itemName: 'Gene',
+        tooltip: ['log2FC Z-score']
+      }
+    }
+  ]
+};
+option && myChart.setOption(option);
+</script>
+</div>
+
+<div style="width:400px;">
+<div id="main10" style="width: 400px;height:220px;"></div>
+<script type="text/javascript">
+var chartDom = document.getElementById('main10');
+var myChart = echarts.init(chartDom);
+var option;
+var tscore_treg = {{ tscore_treg|tojson }}
+
+option = {
+  tooltip: {
+    trigger: 'axis'
+  },
+  radar: [ /// red item #bf444c  area #d88273 /// green #91cc75 #bbe9a6 /// blue #5470c6 #8ca2e4 /// skyblue #73c0de #a4e0f7
+    {
+      name: {
+        textStyle: {
+          fontSize: 18,
+          color: 'black'
+        }
+      },
+      indicator: [
+        { text: 'Foxp3', max: 1 },
+        { text: 'proliferation', max: 1 },
+        { text: 'expansion', max: 1 },
+        { text: 'metabolic', max: 1 },
+        { text: 'IL2RA', max: 1 },
+      ], 
+      center: ['50%', '60%'],
+      radius: '65%',
+    }
+  ],
+  series: [
+    {
+      name: 'T perturb score',
+      type: 'radar',
+      tooltip: {
+        trigger: 'item'
+      },
+      itemStyle: { color: '#bf444c' },
+      areaStyle: { color: '#fff', opacity: 0 },
+      data: [
+        {
+          value: tscore_treg
+        }
+      ]
+    }
+  ]
+};
+
+option && myChart.setOption(option);
+</script>
+  </div>
+</div>
+
+<hr>
+
+<div style="display:flex;">
+  <div style="width:720px;">
+    <div style="text-align:center;"><h4>CAR-T datasets</h4></div>
+<div id="main11" style="width: 680px;height:120px;"></div>
+<script type="text/javascript">
+var chartDom = document.getElementById('main11');
+var myChart = echarts.init(chartDom);
+var option;
+var zlfc_cart_list = {{ zlfc_cart_list|tojson }}
+
+option = {
+  dataset: [
+    {
+      id: 'boxpltData',
+      dimensions: [ 'Study', 'min', 'Q1', 'median', 'Q3', 'max', 'log2FC Z-score', 'Gene' ],
+      source: zlfc_cart_list
+    }
+  ],
+  tooltip: {
+    trigger: 'axis',
+    confine: true
+  },
+  xAxis: {
+    name: 'log2FC Z-score',
+    nameLocation: 'middle',
+    nameGap: 25,
+    nameTextStyle: { fontSize: 15 },
+    scale: true,
+    axisLabel: { fontSize: 15 },
+    splitArea: {
+      show: false
+    },
+    splitLine: {
+      show: false
+    }
+  },
+  yAxis: {
+    type: 'category',
+    axisTick: { show: false },
+    axisLabel: { fontSize: 12 },
+    splitArea: {
+      show: true
+    },
+    splitLine: {
+      show: true
+    }
+  },
+  grid: {
+    top: 0,
+    bottom: 60,
+    left: 240
+  },
+  series: [
+    {
+      type: 'boxplot',
+      silent: true,
+      emphasis: {
+        disabled: true
+      },
+      tooltip: {
+        show: false
+      },
+      datasetId: 'boxpltData',
+      itemStyle: {
+        color: '#b8c5f2'
+      },
+      encode: {
+        x: ['min', 'Q1', 'median', 'Q3', 'max'],
+        y: 'Study'
+      }
+    },
+    {
+      /// name: 'logFC Z-score',///
+      type: 'scatter',
+      datasetId: 'boxpltData',
+      symbolSize: 10,
+      tooltip: {
+        trigger: 'item'
+      },
+      itemStyle: {
+        color: '#d00000'
+      },
+      encode: {
+        x: 'log2FC Z-score',
+        y: 'Study',
+        itemName: 'Gene',
+        tooltip: ['log2FC Z-score']
+      }
+    }
+  ]
+};
+option && myChart.setOption(option);
+</script>
+</div>
+</div>
+
+</div>
+  </div>
+
+
+<div class="panel panel-default">
+           <div class="panel-heading">
+            <h4> Top 50 [ activate ] genes for augment T cells functions ranked by TPS scores</h4>
+           </div>
+           <ul id="myTab" class="nav nav-tabs" style="margin-left: 15px">
+            <li class="active"><a href="#tabsb1" data-toggle="tab" style="font-family: Times New Roman; font-size: 16px;font-weight:bold">CD8 T cell</a>
+            </li>
+            <li><a href="#tabsb2" data-toggle="tab" style="font-family: Times New Roman; font-size: 16px;font-weight:bold">CD4 T cell</a>
+            </li>
+            <li><a href="#tabsb3" data-toggle="tab" style="font-family: Times New Roman; font-size: 16px;font-weight:bold">Treg cell</a>
+            </li>
+            <li><a href="#tabsb4" data-toggle="tab" style="font-family: Times New Roman; font-size: 16px;font-weight:bold">CAR-T cell</a>
+            </li>
+           </ul>
+<div class="tab-content">
+  <div id="tabsb1" style="width:900px;height:400px;" class="tab-pane fade in active echart">
+<script type="text/javascript">
+var chartDom = document.getElementById('tabsb1');
+var myChart = echarts.init(chartDom);
+var option;
+var cd8t_top50_activate = {{ cd8t_top50_activate|tojson }}
+
+option = {
+  dataset: [
+    {
+      id: 'up',
+      dimensions: ['gene', 'tscore'],
+      source: cd8t_top50_activate
+    }
+  ],
+  tooltip: {
+    show: true
+  },
+  grid :{ top: 65, bottom: 30 },
+  title:{
+    //text: 'Top genes up 50 and down 50 genes',
+    left: 'center',
+    padding: [
+      15,  // up
+      0, // right
+      5,  // down
+      0, // left
+    ],
+    textStyle: {
+      fontSize: '20',
+    },
+  },
+  xAxis: {
+    type: 'category',
+    axisLabel: { show: false },
+    axisTick: { show: false },
+    splitArea: {
+      show: false
+    },
+    splitLine: {
+      show: false
+    }
+  },
+  yAxis: {
+    type: 'value',
+    name: 'T cell perturb score',
+    nameLocation: 'middle',
+    nameGap: 35,
+    nameTextStyle: { fontSize: 18 },
+    axisLine: { show: true },
+    axisTick: { show: true },
+    axisLabel: {
+      show: true,
+      fontSize: 15
+    },
+    splitArea: {
+      show: false
+    },
+    splitLine: {
+      show: false
+    }
+  },
+  series: [
+    {
+      type: 'bar',
+      datasetId: 'up',
+      encode: {
+        x: 'gene',
+        y: 'tscore'
+      },
+      label: {
+        show: true,
+        rotate: '60',
+        color: "black",
+        formatter: function(d) {
+          return d.name;
+        },
+        position: 'top',
+        verticalAlign: 'middle',
+        align: 'bottom',
+        distance: 2,
+      },
+    }
+  ]
+};
+
+option && myChart.setOption(option);
+</script></div>
+
+<div id="tabsb2" style="width:900px;height:400px;" class="tab-pane fade echart">
+<script type="text/javascript">
+var chartDom = document.getElementById('tabsb2');
+var myChart = echarts.init(chartDom);
+var option;
+var cd4t_top50_activate = {{ cd4t_top50_activate|tojson }}
+
+option = {
+  dataset: [
+    {
+      id: 'up',
+      dimensions: ['gene', 'tscore'],
+      source: cd4t_top50_activate
+    }
+  ],
+  tooltip: {
+    show: true
+  },
+  grid :{ top: 65, bottom: 30 },
+  title:{
+    //text: 'Top genes up 50 and down 50 genes',
+    left: 'center',
+    padding: [
+      15,  // up
+      0, // right
+      5,  // down
+      0, // left
+    ],
+    textStyle: {
+      fontSize: '20',
+    },
+  },
+  xAxis: {
+    type: 'category',
+    axisLabel: { show: false },
+    axisTick: { show: false },
+    splitArea: {
+      show: false
+    },
+    splitLine: {
+      show: false
+    }
+  },
+  yAxis: {
+    type: 'value',
+    name: 'T cell perturb score',
+    nameLocation: 'middle',
+    nameGap: 35,
+    nameTextStyle: { fontSize: 18 },
+    axisLine: { show: true },
+    axisTick: { show: true },
+    axisLabel: {
+      show: true,
+      fontSize: 15
+    },
+    splitArea: {
+      show: false
+    },
+    splitLine: {
+      show: false
+    }
+  },
+  series: [
+    {
+      type: 'bar',
+      datasetId: 'up',
+      encode: {
+        x: 'gene',
+        y: 'tscore'
+      },
+      label: {
+        show: true,
+        rotate: '60',
+        color: "black",
+        formatter: function(d) {
+          return d.name;
+        },
+        position: 'top',
+        verticalAlign: 'middle',
+        align: 'bottom',
+        distance: 2,
+      },
+    }
+  ]
+};
+
+option && myChart.setOption(option);
+</script></div>
+
+
+<div id="tabsb3" style="width:900px;height:400px;" class="tab-pane fade echart">
+<script type="text/javascript">
+var chartDom = document.getElementById('tabsb3');
+var myChart = echarts.init(chartDom);
+var option;
+var treg_top50_activate = {{ treg_top50_activate|tojson }}
+
+option = {
+  dataset: [
+    {
+      id: 'up',
+      dimensions: ['gene', 'tscore'],
+      source: treg_top50_activate
+    }
+  ],
+  tooltip: {
+    show: true
+  },
+  grid :{ top: 65, bottom: 30 },
+  title:{
+    //text: 'Top genes up 50 and down 50 genes',
+    left: 'center',
+    padding: [
+      15,  // up
+      0, // right
+      5,  // down
+      0, // left
+    ],
+    textStyle: {
+      fontSize: '20',
+    },
+  },
+  xAxis: {
+    type: 'category',
+    axisLabel: { show: false },
+    axisTick: { show: false },
+    splitArea: {
+      show: false
+    },
+    splitLine: {
+      show: false
+    }
+  },
+  yAxis: {
+    type: 'value',
+    name: 'T cell perturb score',
+    nameLocation: 'middle',
+    nameGap: 35,
+    nameTextStyle: { fontSize: 18 },
+    axisLine: { show: true },
+    axisTick: { show: true },
+    axisLabel: {
+      show: true,
+      fontSize: 15
+    },
+    splitArea: {
+      show: false
+    },
+    splitLine: {
+      show: false
+    }
+  },
+  series: [
+    {
+      type: 'bar',
+      datasetId: 'up',
+      encode: {
+        x: 'gene',
+        y: 'tscore'
+      },
+      label: {
+        show: true,
+        rotate: '60',
+        color: "black",
+        formatter: function(d) {
+          return d.name;
+        },
+        position: 'top',
+        verticalAlign: 'middle',
+        align: 'bottom',
+        distance: 2,
+      },
+    }
+  ]
+};
+
+option && myChart.setOption(option);
+</script></div>
+
+
+<div id="tabsb4" style="width:900px;height:400px;" class="tab-pane fade echart">
+<script type="text/javascript">
+var chartDom = document.getElementById('tabsb4');
+var myChart = echarts.init(chartDom);
+var option;
+var cart_top50_activate = {{ cart_top50_activate|tojson }}
+
+option = {
+  dataset: [
+    {
+      id: 'up',
+      dimensions: ['gene', 'tscore'],
+      source: cart_top50_activate
+    }
+  ],
+  tooltip: {
+    show: true
+  },
+  grid :{ top: 65, bottom: 30 },
+  title:{
+    //text: 'Top genes up 50 and down 50 genes',
+    left: 'center',
+    padding: [
+      15,  // up
+      0, // right
+      5,  // down
+      0, // left
+    ],
+    textStyle: {
+      fontSize: '20',
+    },
+  },
+  xAxis: {
+    type: 'category',
+    axisLabel: { show: false },
+    axisTick: { show: false },
+    splitArea: {
+      show: false
+    },
+    splitLine: {
+      show: false
+    }
+  },
+  yAxis: {
+    type: 'value',
+    name: 'T cell perturb score',
+    nameLocation: 'middle',
+    nameGap: 35,
+    nameTextStyle: { fontSize: 18 },
+    axisLine: { show: true },
+    axisTick: { show: true },
+    axisLabel: {
+      show: true,
+      fontSize: 15
+    },
+    splitArea: {
+      show: false
+    },
+    splitLine: {
+      show: false
+    }
+  },
+  series: [
+    {
+      type: 'bar',
+      datasetId: 'up',
+      encode: {
+        x: 'gene',
+        y: 'tscore'
+      },
+      label: {
+        show: true,
+        rotate: '60',
+        color: "black",
+        formatter: function(d) {
+          return d.name;
+        },
+        position: 'top',
+        verticalAlign: 'middle',
+        align: 'bottom',
+        distance: 2,
+      },
+    }
+  ]
+};
+
+option && myChart.setOption(option);
+</script></div>
+
+</div>
+</div>
+
+
+
+<div class="panel panel-default">
+           <div class="panel-heading">
+            <h4> Top 50 [ knockout ] genes for augment T cells functions ranked by TPS scores</h4>
+           </div>
+           <ul id="myTab2" class="nav nav-tabs" style="margin-left: 15px">
+            <li class="active"><a href="#tab2sb1" data-toggle="tab" style="font-family: Times New Roman; font-size: 16px;font-weight:bold">CD8 T cell</a>
+            </li>
+            <li><a href="#tab2sb2" data-toggle="tab" style="font-family: Times New Roman; font-size: 16px;font-weight:bold">CD4 T cell</a>
+            </li>
+            <li><a href="#tab2sb3" data-toggle="tab" style="font-family: Times New Roman; font-size: 16px;font-weight:bold">Treg cell</a>
+            </li>
+            <li><a href="#tab2sb4" data-toggle="tab" style="font-family: Times New Roman; font-size: 16px;font-weight:bold">CAR-T cell</a>
+            </li>
+           </ul>
+<div class="tab-content" style="width: auto">
+  <div id="tab2sb1" style="width:900px;height:400px;" class="tab-pane fade in active echart">
+<script type="text/javascript">
+var chartDom = document.getElementById('tab2sb1');
+var myChart21 = echarts.init(chartDom);
+var option;
+var cd8t_top50_knockout = {{ cd8t_top50_knockout|tojson }}
+
+option = {
+  dataset: [
+    {
+      id: 'up',
+      dimensions: ['gene', 'tscore'],
+      source: cd8t_top50_knockout
+    }
+  ],
+  tooltip: {
+    show: true
+  },
+  grid :{ top: 65, bottom: 30 },
+  xAxis: {
+    type: 'category',
+    axisLabel: { interval: 0, show: false },
+    axisTick: { show: false },
+    splitArea: {
+      show: false
+    },
+    splitLine: {
+      show: false
+    }
+  },
+  yAxis: {
+    type: 'value',
+    name: 'T cell perturb score',
+    nameLocation: 'middle',
+    nameGap: 35,
+    nameTextStyle: { fontSize: 18 },
+    axisLine: { show: true },
+    axisTick: { show: true },
+    axisLabel: {
+      show: true,
+      fontSize: 15
+    },
+    splitArea: {
+      show: false
+    },
+    splitLine: {
+      show: false
+    }
+  },
+  series: [
+    {
+      type: 'bar',
+      datasetId: 'up',
+      encode: {
+        x: 'gene',
+        y: 'tscore'
+      },
+      label: {
+        show: true,
+        rotate: '60',
+        color: "black",
+        formatter: function(d) {
+          return d.name;
+        },
+        position: 'top',
+        verticalAlign: 'middle',
+        align: 'bottom',
+        distance: 2,
+      },
+    }
+  ]
+};
+
+option && myChart21.setOption(option);
+resize(); 
+</script></div>
+
+<div id="tab2sb2" style="width:900px;height:400px;" class="tab-pane fade echart">
+<script type="text/javascript">
+var chartDom = document.getElementById('tab2sb2');
+var myChart22 = echarts.init(chartDom);
+var option;
+var cd4t_top50_knockout = {{ cd4t_top50_knockout|tojson }}
+
+option = {
+  dataset: [
+    {
+      id: 'up',
+      dimensions: ['gene', 'tscore'],
+      source: cd4t_top50_knockout
+    }
+  ],
+  tooltip: {
+    show: true
+  },
+  grid :{ top: 65, bottom: 30 },
+  xAxis: {
+    type: 'category',
+    axisLabel: { interval: 0, show: false },
+    axisTick: { show: false },
+    splitArea: {
+      show: false
+    },
+    splitLine: {
+      show: false
+    }
+  },
+  yAxis: {
+    type: 'value',
+    name: 'T cell perturb score',
+    nameLocation: 'middle',
+    nameGap: 35,
+    nameTextStyle: { fontSize: 18 },
+    axisLine: { show: true },
+    axisTick: { show: true },
+    axisLabel: {
+      show: true,
+      fontSize: 15
+    },
+    splitArea: {
+      show: false
+    },
+    splitLine: {
+      show: false
+    }
+  },
+  series: [
+    {
+      type: 'bar',
+      datasetId: 'up',
+      encode: {
+        x: 'gene',
+        y: 'tscore'
+      },
+      label: {
+        show: true,
+        rotate: '60',
+        color: "black",
+        formatter: function(d) {
+          return d.name;
+        },
+        position: 'top',
+        verticalAlign: 'middle',
+        align: 'bottom',
+        distance: 2,
+      },
+    }
+  ]
+};
+
+option && myChart22.setOption(option);
+resize();
+</script></div>
+
+
+<div id="tab2sb3" style="width:900px;height:400px;" class="tab-pane fade echart">
+<script type="text/javascript">
+var chartDom = document.getElementById('tab2sb3');
+var myChart23 = echarts.init(chartDom);
+var option;
+var treg_top50_knockout = {{ treg_top50_knockout|tojson }}
+
+option = {
+  dataset: [
+    {
+      id: 'up',
+      dimensions: ['gene', 'tscore'],
+      source: treg_top50_knockout
+    }
+  ],
+  tooltip: {
+    show: true
+  },
+  grid :{ top: 65, bottom: 30 },
+  xAxis: {
+    type: 'category',
+    axisLabel: { interval: 0, show: false },
+    axisTick: { show: false },
+    splitArea: {
+      show: false
+    },
+    splitLine: {
+      show: false
+    }
+  },
+  yAxis: {
+    type: 'value',
+    name: 'T cell perturb score',
+    nameLocation: 'middle',
+    nameGap: 35,
+    nameTextStyle: { fontSize: 18 },
+    axisLine: { show: true },
+    axisTick: { show: true },
+    axisLabel: {
+      show: true,
+      fontSize: 15
+    },
+    splitArea: {
+      show: false
+    },
+    splitLine: {
+      show: false
+    }
+  },
+  series: [
+    {
+      type: 'bar',
+      datasetId: 'up',
+      encode: {
+        x: 'gene',
+        y: 'tscore'
+      },
+      label: {
+        show: true,
+        rotate: '60',
+        color: "black",
+        formatter: function(d) {
+          return d.name;
+        },
+        position: 'top',
+        verticalAlign: 'middle',
+        align: 'bottom',
+        distance: 2,
+      },
+    }
+  ]
+};
+
+option && myChart23.setOption(option);
+</script></div>
+
+
+<div id="tab2sb4" style="width:900px;height:400px;" class="tab-pane fade echart">
+<script type="text/javascript">
+var chartDom = document.getElementById('tab2sb4');
+var myChart24 = echarts.init(chartDom);
+var option;
+var cart_top50_knockout = {{ cart_top50_knockout|tojson }}
+
+option = {
+  dataset: [
+    {
+      id: 'up',
+      dimensions: ['gene', 'tscore'],
+      source: cart_top50_knockout
+    }
+  ],
+  tooltip: {
+    show: true
+  },
+  grid :{ top: 65, bottom: 30 },
+  xAxis: {
+    type: 'category',
+    axisLabel: { interval: 0, show: false },
+    axisTick: { show: false },
+    splitArea: {
+      show: false
+    },
+    splitLine: {
+      show: false
+    }
+  },
+  yAxis: {
+    type: 'value',
+    name: 'T cell perturb score',
+    nameLocation: 'middle',
+    nameGap: 35,
+    nameTextStyle: { fontSize: 18 },
+    axisLine: { show: true },
+    axisTick: { show: true },
+    axisLabel: {
+      show: true,
+      fontSize: 15
+    },
+    splitArea: {
+      show: false
+    },
+    splitLine: {
+      show: false
+    }
+  },
+  series: [
+    {
+      type: 'bar',
+      datasetId: 'up',
+      encode: {
+        x: 'gene',
+        y: 'tscore'
+      },
+      label: {
+        show: true,
+        rotate: '60',
+        color: "black",
+        formatter: function(d) {
+          return d.name;
+        },
+        position: 'top',
+        verticalAlign: 'middle',
+        align: 'bottom',
+        distance: 2,
+      },
+    }
+  ]
+};
+
+option && myChart24.setOption(option);
+</script></div>
+
+</div>
+</div>
+
+
+
+
+</div>
+
+<!--
+<script>
+$('a[data-toggle=tab').on('shown.bs.tab', function (e) {
+  window.dispatchEvent(new Event('resize'));   
+});
+</script>
+-->
+
+
+
+{% endblock content %}

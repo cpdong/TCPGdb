@@ -1,0 +1,77 @@
+{% extends '/base.html' %}
+
+{% block headContent %}
+    <title>Search | TCPGdb</title>
+
+
+<script type="text/javascript"> /* listen to the reset bar, if no input no respond */
+$(document).ready(function(){
+ $("#reset").click(function(){ 
+  location.reload(true);
+  });
+});
+</script>
+
+{% endblock %}
+
+{% block navContent %}
+<li><a href="{{ url_for('datasets') }}"><strong>Datasets Summary</strong></a></li>
+<li><a href="{{ url_for('crispr') }}"><strong>T-Screen</strong></a></li>
+<li><a href="{{ url_for('score') }}"><strong>TPS-score</strong></a></li>
+<li><a href="{{ url_for('search') }}"><strong><span style="color: #ffffff;">T-GEXP</span></strong></a></li>
+<li><a href="{{ url_for('document') }}"><strong>Document</strong></a></li>
+<li><a href="{{ url_for('contact') }}"><strong>Contact</strong></a></li>
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="row" style="margin-left:5px;margin-right:5px">
+<div ng-view="" class="ng-scope"><!--<div class="container" >-->
+<div class="row ng-scope" style="margin-left:200px;margin-right:300px">
+
+           <div class="bs-callout bs-callout-info" style="margin-top: 10px;margin-bottom: 10px;">
+                <div class="description" style="margin-bottom: 25px">
+                       <span class="glyphicon glyphicon-eye-open" style="color: #335238;"> </span>
+                    <strong style="line-height : 30px ;font-size:20px;color: #335238;font-family: Times, serif;"> Overview of T-GEXP page</strong>
+
+                           <p style="font-family: Times, serif; font-size: 18px; text-align: justify;text-justify: inter-character; margin-right: 40px; margin-left: 12px;">
+                               To provide a comprehensive view of gene function specifically for T cells, we present the “T-GEXP” (T cell gene function explorer) module for exploring gene expression within different T cell subtypes, network analysis of co-expressed genes and pathways and links to T cell and CAR-T-related pathologies using existing clinical and experimental data. The search will return results including: <br></p>
+                            <p style="font-family: Times, serif; font-size: 18px; margin-right: 40px; margin-left: 15px;">
+                                &#9632 &nbsp; Gene abundance across 16 T cell subtypes using sorted T cell transcriptomic data.<br>
+                                &#9632 &nbsp; T cell-specific co-expressed gene and pathways.<br>
+                                &#9632 &nbsp; Genes and CAR T-cell exhaustion and therapeutic responses.<br>
+                                &#9632 &nbsp; Gene and T cell lymphoma prognosis.<br>
+                                &#9632 &nbsp; Gene expression and autoimmune diseases.</p>
+                </div>
+                <hr>
+
+<div class="row" style="margin-bottom: 25px; padding-left:30px; padding-right:100px;">                
+
+<div class="col-sm-12" style="padding-left:30px; padding-right:100px;">
+    <div style="margin-left:10px;"><span style="font-size: 16px">Type a gene symbol or Ensembl ID!</span></div>
+        <form action="/details" class="searchform" method="POST">
+                                <div class="col-sm-10">
+                                    <input class="form-control" type="text" required="required" name="search" placeholder="Eg. PDCD1 or ENSG00000188389" autofocus="" autocomplete="off" style="height:45px;margin-top:5px;"></div>
+                                <div class="col-sm-2">
+                                    <button type="submit" class="btn btn-primary" id="searchGeneButt" style="width:135px;height:45px;padding:0px;font-size:18px;margin-top:5px;">Search Gene !</button>
+                                </div>
+            </form>
+        </div>
+            </div>
+    </div>
+
+      <div class="panel panel-default" style="margin: 0px auto;">
+    <div class="row" style="display:flex; justify-content:center; margin-top:25px;margin-bottom:25px;"> 
+        <img src="./static/data/img/Panel5_cover.png" width="45%" height="45%">
+    </div>
+      </div>
+
+         </div>
+       </div>
+
+
+      </div>
+
+{% endblock content %}

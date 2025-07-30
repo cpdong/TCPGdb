@@ -1,0 +1,356 @@
+{% extends '/base.html' %}
+
+{% block headContent %}
+    <title>Search | TCPGdb</title>
+
+<!--- clicked button change color and revert --->
+<script>
+    var prevDiv=null
+    function changecolor(){ 
+      if(prevDiv) {
+        prevDiv.style.backgroundColor = "white";
+      }
+      var target = event.currentTarget
+      target.style.backgroundColor="#d1d3d5" 
+      selected = true                               
+      prevDiv = target;
+    }
+</script>
+<!--- clicked button scroll to the locations --->
+<script> function go2qsearch1() { const element = document.getElementById("qsearch1");element.scrollIntoView();}</script>
+<script> function go2qsearch2() { const element = document.getElementById("qsearch2");element.scrollIntoView();}</script>
+<script> function go2qsearch3() { const element = document.getElementById("qsearch3");element.scrollIntoView();}</script>
+<script> function go2qsearch4() { const element = document.getElementById("qsearch4");element.scrollIntoView();} </script>
+<script> function go2qsearch5() { const element = document.getElementById("qsearch5");element.scrollIntoView();}</script>
+<script> function go2qsearch6() { const element = document.getElementById("qsearch6");element.scrollIntoView();} </script>
+
+{% endblock %}
+
+
+{% block navContent %}
+<li><a href="{{ url_for('datasets') }}"><strong>Datasets Summary</strong></a></li>
+<li><a href="{{ url_for('crispr') }}"><strong>T-Screen</strong></a></li>
+<li><a href="{{ url_for('score') }}"><strong>TPS-score</strong></a></li>
+<li><a href="{{ url_for('search') }}"><strong>T-GEXP</strong></a></li>
+<li><a href="{{ url_for('document') }}"><strong>Document</strong></a></li>
+<li><a href="{{ url_for('contact') }}"><strong>Contact</strong></a></li>
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="container-fluid ng-scope" style="text-align:justify; text-justify:inter-ideograph;">
+    <div class="row">
+        <div class="col-md-2">
+            <div style="position:fixed;text-align:left;">
+                <h4><a id="qbtn1" onclick="go2qsearch1();changecolor(this);" class="cursor-hand list-group-item">Gene information</a></h5>
+                <h4><a id="qbtn2" onclick="go2qsearch2();changecolor(this);" class="cursor-hand list-group-item">Expression in T cells</a></h5>
+                <h4><a id="qbtn3" onclick="go2qsearch3();changecolor(this);" class="cursor-hand list-group-item">Co-expression genes</a></h5>
+                <h4><a id="qbtn4" onclick="go2qsearch4();changecolor(this);" class="cursor-hand list-group-item">CAR-T efficency & Gene</a></h5>
+                <h4><a id="qbtn5" onclick="go2qsearch5();changecolor(this);" class="cursor-hand list-group-item">Prognosis in T cancers</a></h5>
+                <h4><a id="qbtn6" onclick="go2qsearch6();changecolor(this);" class="cursor-hand list-group-item">Autoimmune associations</a></h5>
+            </div>
+        </div>
+
+
+    <div class="col-md-10">
+
+            <div class="panel panel-default" id="qsearch1">
+                <div class="panel-heading">
+                    <h4 class="ng-binding">Basic information of {{ realname }}</h4>
+                </div>
+                <div class="panel-body">
+                    <dl class="dl-horizontal ng-scope" ng-repeat="gene_info in gene_basic_RNR_list_all">
+                        <dt>Ensembl Gene ID:</dt>
+                        <dd class="ng-binding"> {{ search_gene }} </dd>
+                        <dt>Entrez Gene ID:</dt>
+                        <dd><a href="https://www.ncbi.nlm.nih.gov/gene/{{ entrezid }}" target="_blank" class="ng-binding"> {{ entrezid }}</a></dd>
+                        <dt>Gene symbol:</dt>
+                        <dd class="ng-binding">{{ realname }}</dd>
+                        <dt>Biological process:</dt>
+                        <dd style="text-align: justify" class="ng-binding"> {{ gene_BP }} </dd>
+                        <dt>Cellular component:</dt>
+                        <dd style="text-align: justify" class="ng-binding"> {{ gene_CC }} </dd>
+                        <dt>Molecular function:</dt>
+                        <dd style="text-align: justify" class="ng-binding"> {{ gene_MF }} </dd>
+                    </dl><!-- end ngRepeat: gene_info in gene_basic_RNR_list_all -->
+                </div>
+            </div>
+
+            <div class="panel panel-default" id="qsearch2">
+                <div class="panel-heading">
+                    <h4 class="ng-binding"> Baseline expression in T cell subtypes of {{ realname }}</h4>
+                </div>
+
+                <div class="panel-body">
+                  <img style="max-width: 95%; height: auto;" src="data:image/png;base64, {{ tcell_exp_plt }}" alt="graph">
+                </div>
+           </div>
+
+
+
+
+            <div class="panel panel-default" id="qsearch3">
+                <div class="panel-heading">
+                    <h4 class="ng-binding">Co-expressed genes & pathways with {{ realname }}</h4>
+                </div>
+                <div class="panel-body">
+           <ul id="myTab" class="nav nav-tabs" style="margin-left: 15px">
+            <li class="active"><a href="#tabsb1" data-toggle="tab" style="font-family: Times New Roman; font-size: 16px;font-weight:bold">Coexpressed-Genes</a>
+            </li>
+            <li><a href="#tabsb2" data-toggle="tab" style="font-family: Times New Roman; font-size: 16px;font-weight:bold">Coexpressed-Gene-GSEA</a>
+            </li>
+           </ul>
+<div class="tab-content">
+  <div id="tabsb1" style="width:960px;height:400px;" class="tab-pane fade in active echart">
+<script type="text/javascript">
+var chartDom = document.getElementById('tabsb1');
+var myChart = echarts.init(chartDom);
+var option;
+var coexp_pos = {{ coexp_pos|tojson }}
+var coexp_neg = {{ coexp_neg|tojson }}
+
+option = {
+  dataset: [
+    {
+      id: 'up',
+      dimensions: ['gene', 'rho'],
+      source: coexp_pos
+    },
+    {
+      id: 'down',
+      dimensions: ['gene', 'rho'],
+      source: coexp_neg
+    }
+  ],
+  tooltip: {
+    show: true
+  },
+  title:{
+    text: 'Top 50 positive and negative coexpressed genes',
+    left: 'center',
+    padding: [
+      15,  // up
+      0, // right
+      5,  // down
+      0, // left
+    ],
+    textStyle: {
+      fontSize: '16',
+    },
+  },
+  xAxis: {
+    type: 'category',
+    axisLabel: { show: false },
+    axisTick: { show: false },
+    splitArea: {
+      show: false
+    },
+    splitLine: {
+      show: true
+    }
+  },
+  yAxis: {
+    type: 'value',
+    name: 'Spearman coefficient rho',
+    nameLocation: 'middle',
+    nameGap: 35,
+    nameTextStyle: { fontSize: 18 },
+    axisLine: { show: true },
+    axisTick: { show: true },
+    axisLabel: {
+      show: true,
+      fontSize: 11
+    },
+    splitArea: {
+      show: false
+    },
+    splitLine: {
+      show: false
+    }
+  },
+  series: [
+    {
+      type: 'bar',
+      datasetId: 'up',
+      encode: {
+        x: 'gene',
+        y: 'rho'
+      },
+      label: {
+        show: true,
+        rotate: '60',
+        color: "black",
+        textStyle: { fontSize: 8 },
+        formatter: function(d) {
+          return d.name;
+        },
+        position: 'top',
+        verticalAlign: 'middle',
+        align: 'bottom',
+        distance: 2,
+      },
+    },
+    {
+      type: 'bar',
+      datasetId: 'down',
+      encode: {
+        x: 'gene',
+        y: 'rho'
+      },
+      label: {
+        show: true,
+        rotate: '60',
+        color: "black",
+        textStyle: { fontSize: 8 },
+        formatter: function(d) {
+          return d.name;
+        },
+        position: 'bottom',
+        verticalAlign: 'middle',
+        distance: 8,
+      },
+    }
+  ]
+};
+
+option && myChart.setOption(option);
+</script></div>
+
+<div id="tabsb2" style="width:960px;height:400px;" class="tab-pane fade echart">
+<script type="text/javascript">
+var chartDom = document.getElementById('tabsb2');
+var myChart = echarts.init(chartDom);
+var option;
+var coexpPathway_pos_data = {{ coexpPathway_pos_data|tojson }}
+var coexpPathway_neg_data = {{ coexpPathway_neg_data|tojson }}
+
+option = {
+  dataset: [
+    {
+      id: 'up',
+      dimensions: ['pathway', 'NES', 'pvalue'],
+      source: coexpPathway_pos_data
+    },
+    {
+      id: 'down',
+      dimensions: ['pathway', 'NES', 'pvalue'],
+      source: coexpPathway_neg_data
+    }
+  ],
+  tooltip: {
+    show: true
+  },
+  title:{
+    text: 'Top 30 positve and negative pathways',
+    left: 'center',
+    padding: [
+      15,  // up
+      0, // right
+      5,  // down
+      0, // left
+    ],
+    textStyle: {
+      fontSize: '20',
+    },
+  },
+  xAxis: {
+    type: 'category',
+    axisLabel: { show: false },
+    axisTick: { show: false },
+    splitArea: {
+      show: false
+    },
+    splitLine: {
+      show: true
+    }
+  },
+  yAxis: {
+    type: 'value',
+    name: 'Normalized enrichment score',
+    nameLocation: 'middle',
+    nameGap: 35,
+    nameTextStyle: { fontSize: 18 },
+    axisLine: { show: true },
+    axisTick: { show: true },
+    axisLabel: {
+      show: true,
+      fontSize: 15
+    },
+    splitArea: {
+      show: false
+    },
+    splitLine: {
+      show: false
+    }
+  },
+  series: [
+    {
+      type: 'bar',
+      datasetId: 'up',
+      encode: {
+        x: 'pathway',
+        y: 'NES'
+      }
+    },
+    {
+      type: 'bar',
+      datasetId: 'down',
+      encode: {
+        x: 'pathway',
+        y: 'NES'
+      }
+    }
+  ]
+};
+
+option && myChart.setOption(option);
+</script></div>
+
+</div>
+
+               </div>
+            </div>
+
+            <div class="panel panel-default" id="qsearch4">
+                <div class="panel-heading">
+                    <h4 class="ng-binding">CAR-T cell efficency and {{ realname }} expression</h4>
+                </div>
+              <div class="panel-body" align="justify">
+                <img style="max-width: 85%; height: auto;" src="data:image/png;base64, {{ cart_plt }}" alt="graph">
+                <p style="text-align: center">Try to explore the scRNAseq ShinyApp for advanced analysis! See links in <strong style="color: #2a62bc">Datasets Summary</strong> section.</span></p>
+              </div>
+     </div>
+
+            <div class="panel panel-default" id="qsearch5">
+                <div class="panel-heading">
+                    <h4 class="ng-binding">{{ realname }} expression & T lymphoma/leukemia prognosis</h4>
+                </div>
+                <div class="panel-body">
+                <img style="max-width: 80%; height: auto;" src="data:image/png;base64, {{ kmplt1_data }}" alt="graph">
+              </div>
+            </div>
+
+
+
+            <div class="panel panel-default" id="qsearch6">
+                <div class="panel-heading">
+                    <h4 class="ng-binding">{{ realname }} expression & autoimmune diseases risk</h4>
+                </div>
+              <div class="panel-body">
+                <img style="max-width: 95%; height: auto;" src="data:image/png;base64, {{ autoimmune_plt }}" alt="graph">
+
+              </div>
+        </div>
+
+
+
+<script>
+$('a[data-toggle=tab').on('shown.bs.tab', function (e) {
+  window.dispatchEvent(new Event('resize'));   
+});
+</script>
+
+
+{% endblock content %}
